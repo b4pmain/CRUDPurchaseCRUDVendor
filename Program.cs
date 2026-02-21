@@ -63,7 +63,14 @@ namespace CRUDPurchaseCRUDVendor
             Console.WriteLine($"Searching for {vendorName}");
             foreach (var vendorSearch in vendor)
             {
-
+                if (vendorName.Equals(vendorSearch))
+                {
+                    Console.WriteLine($"N{vendorName} found.");
+                }
+                else
+                {
+                    Console.WriteLine($"N{vendorName} not found.");
+                }
             }
         }
 
