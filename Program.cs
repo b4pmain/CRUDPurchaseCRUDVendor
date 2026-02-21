@@ -1,5 +1,4 @@
 ﻿using System;
-// https://github.com/b4pmain/CRUDPurchaseCRUDVendor.git
 namespace CRUDPurchaseCRUDVendor
 {
     internal class Program
@@ -17,29 +16,51 @@ namespace CRUDPurchaseCRUDVendor
             }
             
         }
+
         static void Menu()
         {
             string userChoice;
-            string vendor;
-            Console.WriteLine("Welcome to Vendor + Purchase Management\nAdd | Search | Update | Delete | Exit");
+            Console.WriteLine("");
             userChoice = Console.ReadLine();
-            switch (userChoice)
+            switch (userChoice.ToLower())
             {
-                case "Add":
+                case "vendor":
+                    vendorMenu();
+                    break;
+                case "purchase":
+                    purchaseMenu();
+                    break;
+                default:
+                    break;
+            }
+        }
+        
+        static void vendorMenu()
+        {
+            string userChoice;
+            string vendor;
+            Console.WriteLine("Welcome to Vendor Management\nAdd | Search | Update | Delete | Exit");
+            userChoice = Console.ReadLine();
+            switch (userChoice.ToLower())
+            {
+                case "add":
                     Console.WriteLine("Vendor Name: ");
                     vendor = Console.ReadLine();
                     AddVendor(vendor);
                     break;
-                case "Search":
+                case "search":
                     Console.WriteLine("Vendor Name: ");
                     vendor = Console.ReadLine();
                     SearchVendor(vendor);
                     break;
-                case "Update":
+                case "update":
+                    Console.WriteLine("Choose Vendor: ");
+                    vendor = Console.ReadLine();
+                    // Update
                     break;
-                case "Delete":
+                case "delete":
                     break;
-                case "Exit":
+                case "exit":
                     OnSession = false;
                     break;
                 default:
@@ -47,11 +68,11 @@ namespace CRUDPurchaseCRUDVendor
                     break;
             }
         }
-
-        static void Purchase()
+        static void purchaseMenu()
         {
-
+            // yes
         }
+
         static void AddVendor(string vendorName) // add vendor
         {
             Console.WriteLine($"Added {vendorName}.");
@@ -60,18 +81,32 @@ namespace CRUDPurchaseCRUDVendor
 
         static void SearchVendor(string vendorName) // vendor search
         {
+            bool hasFound = false;
+
             Console.WriteLine($"Searching for {vendorName}");
             foreach (var vendorSearch in vendor)
             {
                 if (vendorName.Equals(vendorSearch))
                 {
-                    Console.WriteLine($"N{vendorName} found.");
+                    hasFound = true;
+                    break;
                 }
                 else
                 {
-                    Console.WriteLine($"N{vendorName} not found.");
+                    hasFound = false;
+                    continue;
                 }
             }
+
+            if (hasFound)
+            {
+                Console.WriteLine($"{vendorName} found.");
+            }
+            else
+            {
+                Console.WriteLine($"{vendorName} not found.");
+            }
+
         }
 
         static void Vendors()
