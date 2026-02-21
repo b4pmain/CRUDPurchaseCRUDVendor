@@ -20,13 +20,20 @@ namespace CRUDPurchaseCRUDVendor
         static void Menu()
         {
             string userChoice;
+            string vendor;
             Console.WriteLine("Welcome to Vendor + Purchase Management\nAdd | Search | Update | Delete | Exit");
             userChoice = Console.ReadLine();
             switch (userChoice)
             {
                 case "Add":
+                    Console.WriteLine("Vendor Name: ");
+                    vendor = Console.ReadLine();
+                    AddVendor(vendor);
                     break;
                 case "Search":
+                    Console.WriteLine("Vendor Name: ");
+                    vendor = Console.ReadLine();
+                    SearchVendor(vendor);
                     break;
                 case "Update":
                     break;
@@ -45,10 +52,19 @@ namespace CRUDPurchaseCRUDVendor
         {
 
         }
-        static void AddVendor(string vendorName)
+        static void AddVendor(string vendorName) // add vendor
         {
             Console.WriteLine($"Added {vendorName}.");
             vendor.Add(vendorName);
+        }
+
+        static void SearchVendor(string vendorName) // vendor search
+        {
+            Console.WriteLine($"Searching for {vendorName}");
+            foreach (var vendorSearch in vendor)
+            {
+
+            }
         }
 
         static void Vendors()
