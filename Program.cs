@@ -8,8 +8,8 @@ namespace CRUDPurchaseCRUDVendor
         static bool OnSession = true;
         static void Main(string[] args)
         {
-
-            Vendors(); // initialize vendors
+            Purchases(); // initialize sample purchases
+            Vendors(); // initialize sample vendors
             while (OnSession)
             {
                 Menu();
@@ -43,7 +43,211 @@ namespace CRUDPurchaseCRUDVendor
                     break;
             }
         }
-        
+
+        static bool doContinue() // confirmation message
+        {
+            Console.Write("Do you wish to continue? y/n: ");
+            string choiceInput = Console.ReadLine();
+            bool isContinue = false;
+
+            switch (choiceInput.ToLower())
+            {
+                case "y":
+                    isContinue = true;
+                    break;
+                case "n":
+                    isContinue = false;
+                    break;
+                default:
+                    Console.WriteLine("Invalid Input, System will exit.");
+                    Environment.Exit(0);
+                    break;
+            }
+
+            return isContinue;
+        }
+        static void purchaseMenu() // purchase menu
+        {
+            string userChoice;
+            string purchase;
+            string subChoice;
+            bool isContinue = doContinue();
+            Console.WriteLine(isContinue);
+
+            while (isContinue)
+            {
+                Console.WriteLine("Purchase Management\n[Add] | [Search] | [Update] | [Delete] | [Exit]");
+                userChoice = Console.ReadLine();
+                switch (userChoice.ToLower())
+                {
+                    case "add":
+                        Console.WriteLine("Purchase Name: ");
+                        purchase = Console.ReadLine();
+                        AddPurchase(purchase);
+                        break;
+                    case "search":
+                        Console.WriteLine("What method of search do you want?\n[Single] | [Table]");
+                        subChoice = Console.ReadLine();
+                        SearchPurchase(subChoice);
+                        break;
+                    case "update":
+                        Console.WriteLine("Choose Purchase: ");
+                        purchase = Console.ReadLine();
+                        UpdatePurchase(purchase);
+                        break;
+                    case "delete":
+                        Console.WriteLine("Choose Purchase: ");
+                        purchase = Console.ReadLine();
+                        DeletePurchase(purchase);
+                        break;
+                    case "exit":
+                        Menu();
+                        break;
+                    default:
+                        Console.Write("Invalid Input. ");
+                        break;
+                }
+
+                isContinue = doContinue();
+            }
+        }
+
+        static void AddPurchase(string purchaseName)
+        {
+            Console.WriteLine($"Added {purchaseName}.");
+            purchase.Add(purchaseName);
+        }
+
+        static void SearchPurchase(string subChoice) // purchase retrieve sub-menu
+        {
+            string purchase;
+            switch (subChoice.ToLower())
+            {
+                case "single":
+                    Console.WriteLine("Search for Purchase: ");
+                    purchase = Console.ReadLine();
+                    retrieveSinglePurchase(purchase);
+                    break;
+                case "table":
+                    Console.WriteLine("List of Purchase: ");
+                    retrieveTablePurchase();
+                    break;
+                default:
+                    Console.WriteLine("Invalid Choice.");
+                    break;
+            }
+        }
+
+        static void retrieveSinglePurchase(string purchaseName) // single/specific purchase
+        {
+            bool hasFound = false;
+
+            Console.WriteLine($"Searching for {purchaseName}");
+            foreach (var purchaseSearch in purchase)
+            {
+                if (purchaseName.Equals(purchaseSearch))
+                {
+                    hasFound = true;
+                    break;
+                }
+                else
+                {
+                    hasFound = false;
+                    continue;
+                }
+            }
+
+            if (hasFound)
+            {
+                Console.WriteLine($"{purchaseName} found.");
+            }
+            else
+            {
+                Console.WriteLine($"{purchaseName} not found.");
+            }
+        }
+
+        static void retrieveTablePurchase() // printall purchase
+        {
+            foreach (var purchases in purchase)
+            {
+                Console.WriteLine(purchases);
+            }
+
+            if (purchase.Count < 1)
+            {
+                Console.WriteLine("List is Empty.");
+            }
+        }
+
+        static void UpdatePurchase(string purchaseName) // update purchase
+        {
+            bool hasFound = false;
+            string replacePurchase;
+            int index = 0;
+
+            foreach (var purchaseSearch in purchase)
+            {
+                if (purchaseName.Equals(purchaseSearch))
+                {
+                    hasFound = true;
+                    index = purchase.IndexOf(purchaseName);
+                    break;
+                }
+                else
+                {
+                    hasFound = false;
+                    continue;
+                }
+            }
+
+            if (hasFound)
+            {
+                Console.WriteLine($"{purchaseName} found.");
+                Console.Write($"Replace {purchaseName} with: ");
+                replacePurchase = Console.ReadLine();
+                purchase[index] = replacePurchase;
+
+                Console.WriteLine($"Successfully replaced {purchaseName} with {replacePurchase}");
+            }
+            else
+            {
+                Console.WriteLine($"{purchaseName} not found.");
+            }
+
+        }
+
+        static void DeletePurchase(string purchaseName)
+        {
+            bool hasFound = false;
+            int index = 0;
+
+            foreach (var purchaseSearch in purchase)
+            {
+                if (purchaseName.Equals(purchaseSearch))
+                {
+                    hasFound = true;
+                    break;
+                }
+                else
+                {
+                    hasFound = false;
+                    continue;
+                }
+            }
+
+            if (hasFound)
+            {
+                Console.WriteLine($"{purchaseName} found.");
+                purchase.Remove(purchaseName);
+                Console.WriteLine($"Successfully deleted {purchaseName}.");
+            }
+            else
+            {
+                Console.WriteLine($"{purchaseName} not found.");
+            }
+        }
+
         static void vendorMenu()
         {
             string userChoice;
@@ -89,34 +293,6 @@ namespace CRUDPurchaseCRUDVendor
                 isContinue = doContinue();
             }
 
-        }
-
-        static bool doContinue()
-        {
-            Console.Write("Do you wish to continue? y/n: ");
-            string choiceInput = Console.ReadLine();
-            bool isContinue = false;
-
-            switch (choiceInput.ToLower())
-            {
-                case "y":
-                    isContinue = true;
-                    break;
-                case "n":
-                    isContinue = false;
-                    break;
-                default:
-                    Console.WriteLine("Invalid Input, System will exit.");
-                    Environment.Exit(0);
-                    break;
-            }
-
-            return isContinue;
-        }
-
-        static void purchaseMenu()
-        {
-            // yes
         }
 
         static void AddVendor(string vendorName) // vendor create
@@ -257,6 +433,15 @@ namespace CRUDPurchaseCRUDVendor
             vendor.Add("Rebisco");
             vendor.Add("Nestle");
             vendor.Add("Oishi");
+        }
+
+        static void Purchases()
+        {
+            purchase.Add("Coffee Packs");
+            purchase.Add("Beer Packs");
+            purchase.Add("Biscuit Packs");
+            purchase.Add("Tea Bag");
+            purchase.Add("Cracker Packs");
         }
 
     }
