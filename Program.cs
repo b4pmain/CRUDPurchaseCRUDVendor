@@ -9,7 +9,7 @@ namespace CRUDPurchaseCRUDVendor
         static void Main(string[] args)
         {
 
-            Vendors();
+            Vendors(); // initialize vendors
             while (OnSession)
             {
                 Menu();
@@ -19,18 +19,27 @@ namespace CRUDPurchaseCRUDVendor
 
         static void Menu()
         {
+            OnSession = true;
+
             string userChoice;
-            Console.WriteLine("");
+            Console.WriteLine("Welcome to Purchases and Vendor Management!\n[Purchase Management] | [Vendor Management] | [Exit]");
             userChoice = Console.ReadLine();
             switch (userChoice.ToLower())
             {
                 case "vendor":
                     vendorMenu();
+                    OnSession = false;
                     break;
                 case "purchase":
                     purchaseMenu();
+                    OnSession = false;
+                    break;
+                case "exit":
+                    Console.WriteLine("Program will Exit.");
+                    Environment.Exit(0);
                     break;
                 default:
+                    Console.WriteLine("Invalid Choice. Try Again.");
                     break;
             }
         }
@@ -39,47 +48,104 @@ namespace CRUDPurchaseCRUDVendor
         {
             string userChoice;
             string vendor;
-            Console.WriteLine("Welcome to Vendor Management\nAdd | Search | Update | Delete | Exit");
-            userChoice = Console.ReadLine();
-            switch (userChoice.ToLower())
+            string subChoice;
+            bool isContinue = doContinue();
+            Console.WriteLine(isContinue);
+
+            while (isContinue)
             {
-                case "add":
-                    Console.WriteLine("Vendor Name: ");
+                Console.WriteLine("Vendor Management\n[Add] | [Search] | [Update] | [Delete] | [Exit]");
+                userChoice = Console.ReadLine();
+                switch (userChoice.ToLower())
+                {
+                    case "add":
+                        Console.WriteLine("Vendor Name: ");
+                        vendor = Console.ReadLine();
+                        AddVendor(vendor);
+                        break;
+                    case "search":
+                        Console.WriteLine("What method of search do you want?\n[Single] | [Table]");
+                        subChoice = Console.ReadLine();
+                        SearchVendor(subChoice);
+                        break;
+                    case "update":
+                        Console.WriteLine("Choose Vendor: ");
+                        vendor = Console.ReadLine();
+                        UpdateVendor(vendor);
+                        break;
+                    case "delete":
+                        Console.WriteLine("Choose Vendor: ");
+                        vendor = Console.ReadLine();
+                        DeleteVendor(vendor);
+                        break;
+                    case "exit":
+                        Menu();
+                        break;
+                    default:
+                        Console.Write("Invalid Input. ");
+                        break;
+                }
+
+                isContinue = doContinue();
+            }
+
+        }
+
+        static bool doContinue()
+        {
+            Console.Write("Do you wish to continue? y/n: ");
+            string choiceInput = Console.ReadLine();
+            bool isContinue = false;
+
+            switch (choiceInput.ToLower())
+            {
+                case "y":
+                    isContinue = true;
+                    break;
+                case "n":
+                    isContinue = false;
+                    break;
+                default:
+                    Console.WriteLine("Invalid Input, System will exit.");
+                    Environment.Exit(0);
+                    break;
+            }
+
+            return isContinue;
+        }
+
+        static void purchaseMenu()
+        {
+            // yes
+        }
+
+        static void AddVendor(string vendorName) // vendor create
+        {
+            Console.WriteLine($"Added {vendorName}.");
+            vendor.Add(vendorName);
+        }
+
+        static void SearchVendor(string subChoice) // vendor retrieve sub-menu
+        {
+            string vendor;
+            switch (subChoice.ToLower())
+            {
+                case "single":
+                    Console.WriteLine("Search for Vendor Name: ");
                     vendor = Console.ReadLine();
-                    AddVendor(vendor);
+                    retrieveSingleVendor(vendor);
                     break;
-                case "search":
-                    Console.WriteLine("Vendor Name: ");
-                    vendor = Console.ReadLine();
-                    SearchVendor(vendor);
-                    break;
-                case "update":
-                    Console.WriteLine("Choose Vendor: ");
-                    vendor = Console.ReadLine();
-                    // Update
-                    break;
-                case "delete":
-                    break;
-                case "exit":
-                    OnSession = false;
+                case "table":
+                    Console.WriteLine("List of Vendors: ");
+                    retrieveTableVendor();
                     break;
                 default:
                     Console.WriteLine("Invalid Choice.");
                     break;
             }
         }
-        static void purchaseMenu()
-        {
-            // yes
-        }
 
-        static void AddVendor(string vendorName) // add vendor
-        {
-            Console.WriteLine($"Added {vendorName}.");
-            vendor.Add(vendorName);
-        }
-
-        static void SearchVendor(string vendorName) // vendor search
+        static void retrieveSingleVendor(string vendorName) // single/specific vendor
         {
             bool hasFound = false;
 
@@ -106,7 +172,82 @@ namespace CRUDPurchaseCRUDVendor
             {
                 Console.WriteLine($"{vendorName} not found.");
             }
+        }
 
+        static void retrieveTableVendor() // printall
+        {
+            foreach (var vendors in vendor)
+            {
+                Console.WriteLine(vendors);
+            }
+        }
+
+        static void UpdateVendor(string vendorName) // update vendor
+        {
+            bool hasFound = false;
+            string replaceVendor;
+            int index = 0;
+
+            foreach (var vendorSearch in vendor)
+            {
+                if (vendorName.Equals(vendorSearch))
+                {
+                    hasFound = true;
+                    index = vendor.IndexOf(vendorName);
+                    break;
+                }
+                else
+                {
+                    hasFound = false;
+                    continue;
+                }
+            }
+
+            if (hasFound)
+            {
+                Console.WriteLine($"{vendorName} found.");
+                Console.Write($"Replace {vendorName} with: ");
+                replaceVendor = Console.ReadLine();
+                vendor[index] = replaceVendor;
+
+                Console.WriteLine($"Successfully replaced {vendorName} with {replaceVendor}");
+            }
+            else
+            {
+                Console.WriteLine($"{vendorName} not found.");
+            }
+
+        }
+
+        static void DeleteVendor(string vendorName)
+        {
+            bool hasFound = false;
+            int index = 0;
+
+            foreach (var vendorSearch in vendor)
+            {
+                if (vendorName.Equals(vendorSearch))
+                {
+                    hasFound = true;
+                    break;
+                }
+                else
+                {
+                    hasFound = false;
+                    continue;
+                }
+            }
+
+            if (hasFound)
+            {
+                Console.WriteLine($"{vendorName} found.");
+                vendor.Remove(vendorName);
+                Console.WriteLine($"Successfully deleted {vendorName}");
+            }
+            else
+            {
+                Console.WriteLine($"{vendorName} not found.");
+            }
         }
 
         static void Vendors()
