@@ -22,7 +22,7 @@ namespace CRUDPurchaseCRUDVendor
             OnSession = true;
 
             string userChoice;
-            Console.WriteLine("Welcome to Purchases and Vendor Management!\n[Purchase Management] | [Vendor Management] | [Exit]");
+            Console.WriteLine("Welcome to Purchases and Vendor Management!\n[Purchase Management] | [Vendor Management] | [Print Table] | [Exit]");
             userChoice = Console.ReadLine();
             switch (userChoice.ToLower())
             {
@@ -34,6 +34,9 @@ namespace CRUDPurchaseCRUDVendor
                     purchaseMenu();
                     OnSession = false;
                     break;
+                case "print":
+                    printTable();
+                    break;
                 case "exit":
                     Console.WriteLine("Program will Exit.");
                     Environment.Exit(0);
@@ -41,6 +44,15 @@ namespace CRUDPurchaseCRUDVendor
                 default:
                     Console.WriteLine("Invalid Choice. Try Again.");
                     break;
+            }
+        }
+
+        static void printTable()
+        {
+            Console.WriteLine("Vendor and it's Purchases:");
+            for (int i = 0; i < vendor.Count(); i++)
+            {
+                Console.WriteLine(vendor[i] + " | " + purchase[i]);
             }
         }
 
@@ -72,7 +84,6 @@ namespace CRUDPurchaseCRUDVendor
             string purchase;
             string subChoice;
             bool isContinue = doContinue();
-            Console.WriteLine(isContinue);
 
             while (isContinue)
             {
