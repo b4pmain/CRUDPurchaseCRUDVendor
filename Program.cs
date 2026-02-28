@@ -57,6 +57,7 @@ namespace CRUDPurchaseCRUDVendor
             string VendorName;
             string PurchaseName;
             bool isContinue = doContinue();
+
             while(isContinue)
             {
                 Console.Write("Add Entry For Vendor: \n");
@@ -64,6 +65,7 @@ namespace CRUDPurchaseCRUDVendor
                 if (VendorName != null)
                 {
                     Console.WriteLine($"{VendorName} Added.");
+                    vendor.Add(VendorName);
                 }
 
                 Console.Write("Add Entry For Vendor: \n");
@@ -71,7 +73,9 @@ namespace CRUDPurchaseCRUDVendor
                 if (PurchaseName != null)
                 {
                     Console.WriteLine($"{PurchaseName} Added.");
+                    purchase.Add(PurchaseName);
                 }
+
                 isContinue = doContinue();
             }
 
@@ -79,12 +83,185 @@ namespace CRUDPurchaseCRUDVendor
 
         static void SearchEntry()
         {
+            string userChoice;
+            Console.WriteLine("What do you wanna search for?\n[Vendor] [Purchase] [Print Table]");
+            userChoice = Console.ReadLine();
 
+            switch (userChoice.ToLower())
+            {
+                case "vendor":
+                    searchVendor();
+                    break;
+                case "purchase":
+                    searchPurchase();
+                    break;
+                case "print table":
+                    // printTable();
+                    break;
+                default:
+                    Console.WriteLine("Invalid Choice.");
+                    break;
+            }
+        }
+
+        static void searchVendor()
+        {
+            string vendorName;
+            Console.Write("Type Vendor Name: ");
+            vendorName = Console.ReadLine();
+
+            bool hasFound = false;
+
+            Console.WriteLine($"Searching for {vendorName}");
+            foreach (var vendorSearch in purchase)
+            {
+                if (vendorName.Equals(vendorSearch))
+                {
+                    hasFound = true;
+                    break;
+                }
+                else
+                {
+                    hasFound = false;
+                    continue;
+                }
+            }
+
+            if (hasFound)
+            {
+                Console.WriteLine($"{vendorName} found.");
+            }
+            else
+            {
+                Console.WriteLine($"{vendorName} not found.");
+            }
+
+        }
+
+        static void searchPurchase()
+        {
+            string purchaseName;
+            Console.Write("Type Purchase Name: ");
+            purchaseName = Console.ReadLine();
+            bool hasFound = false;
+            Console.WriteLine($"Searching for {purchaseName}");
+            foreach (var purchaseSearch in purchase)
+            {
+                if (purchaseName.Equals(purchaseSearch))
+                {
+                    hasFound = true;
+                    break;
+                }
+                else
+                {
+                    hasFound = false;
+                    continue;
+                }
+            }
+            if (hasFound)
+            {
+                Console.WriteLine($"{purchaseName} found.");
+            }
+            else
+            {
+                Console.WriteLine($"{purchaseName} not found.");
+            }
         }
 
         static void UpdateEntry()
         {
+            string userChoice;
+            Console.WriteLine("What do you wanna search for?\n[Vendor] [Purchase]");
+            userChoice = Console.ReadLine();
 
+            switch (userChoice.ToLower())
+            {
+                case "vendor":
+                    updateVendor();
+                    break;
+                case "purchase":
+                    updatePurchase();
+                    break;
+                default:
+                    Console.WriteLine("Invalid Choice.");
+                    break;
+            }
+        }
+
+        static void updateVendor()
+        {
+            bool hasFound = false;
+            string replaceVendor, vendorName;
+            int index = 0;
+            Console.WriteLine("");
+            vendorName = Console.ReadLine();
+
+            foreach (var vendorSearch in vendor)
+            {
+                if (vendorName.Equals(vendorSearch))
+                {
+                    hasFound = true;
+                    index = vendor.IndexOf(vendorName);
+                    break;
+                }
+                else
+                {
+                    hasFound = false;
+                    continue;
+                }
+            }
+
+            if (hasFound)
+            {
+                Console.WriteLine($"{vendorName} found.");
+                Console.Write($"Replace {vendorName} with: ");
+                replaceVendor = Console.ReadLine();
+                purchase[index] = replaceVendor;
+
+                Console.WriteLine($"Successfully replaced {vendorName} with {replaceVendor}");
+            }
+            else
+            {
+                Console.WriteLine($"{vendorName} not found.");
+            }
+        }
+
+        static void updatePurchase()
+        {
+            bool hasFound = false;
+            string replacePurchase, purchaseName;
+            int index = 0;
+            Console.WriteLine("");
+            purchaseName = Console.ReadLine();
+
+            foreach (var purchaseSearch in purchase)
+            {
+                if (purchaseName.Equals(purchaseSearch))
+                {
+                    hasFound = true;
+                    index = purchase.IndexOf(purchaseName);
+                    break;
+                }
+                else
+                {
+                    hasFound = false;
+                    continue;
+                }
+            }
+
+            if (hasFound)
+            {
+                Console.WriteLine($"{purchaseName} found.");
+                Console.Write($"Replace {purchaseName} with: ");
+                replacePurchase = Console.ReadLine();
+                purchase[index] = replacePurchase;
+
+                Console.WriteLine($"Successfully replaced {purchaseName} with {replacePurchase}");
+            }
+            else
+            {
+                Console.WriteLine($"{purchaseName} not found.");
+            }
         }
 
         static void DeleteEntry()
