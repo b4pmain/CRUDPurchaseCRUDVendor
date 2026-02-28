@@ -265,7 +265,6 @@ namespace CRUDPurchaseCRUDVendor
             string vendor;
             string subChoice;
             bool isContinue = doContinue();
-            Console.WriteLine(isContinue);
 
             while (isContinue)
             {
