@@ -556,20 +556,12 @@ namespace CRUDPurchaseCRUDVendor
         }
         static void Vendors()
         {
-            vendor.Add("Nescafe");
-            vendor.Add("San Miguel Corporation");
-            vendor.Add("Rebisco");
-            vendor.Add("Nestle");
-            vendor.Add("Oishi");
+
         }
 
         static void Purchases()
         {
-            purchase.Add("Coffee Packs");
-            purchase.Add("Beer Packs");
-            purchase.Add("Biscuit Packs");
-            purchase.Add("Tea Bag");
-            purchase.Add("Cracker Packs");
+
         }
 
     }
