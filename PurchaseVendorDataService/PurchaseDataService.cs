@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace PurchaseVendorDataService
 {
@@ -32,7 +33,6 @@ namespace PurchaseVendorDataService
 
             purchase.Add(cofOneNescafe);
             purchase.Add(cofTwoNescafe);
-
 
         }
 
@@ -69,9 +69,16 @@ namespace PurchaseVendorDataService
             }
         }
 
-        public List<Purchase> GetPurchases()
+        public List<Purchase> GetAllPurchases()
         {
             return purchase;
+        }
+
+        public List<Purchase> PurchaseFromVendors(List<Purchase> product, string ven)
+        {
+            return product
+                .Where(a => a.PurchaseVndr == ven)
+                .ToList();
         }
 
     }

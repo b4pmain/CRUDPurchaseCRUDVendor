@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\PurchaseVendorDataService\PurchaseVendorDataService.csproj" />
+    <ProjectReference Include="..\PurchaseVendorModels\PurchaseVendorModels.csproj" />
+  </ItemGroup>
+
 </Project>

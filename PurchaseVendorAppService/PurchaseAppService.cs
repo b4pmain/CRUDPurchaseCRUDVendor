@@ -8,5 +8,8 @@ namespace PurchaseVendorAppService
 {
     public class PurchaseAppService
     {
+        PurchaseDataService purchaseDataService = new PurchaseDataService();
+
+
     }
 }

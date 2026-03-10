@@ -12,4 +12,9 @@
     <Folder Include="PurchaseVendorAppService\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="PurchaseVendorAppService\PurchaseVendorAppService.csproj" />
+    <ProjectReference Include="PurchaseVendorModels\PurchaseVendorModels.csproj" />
+  </ItemGroup>
+
 </Project>
