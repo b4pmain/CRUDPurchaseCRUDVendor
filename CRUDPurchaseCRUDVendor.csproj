@@ -8,8 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PurchaseVendorAppService\PurchaseVendorAppService.csproj" />
-    <ProjectReference Include="..\PurchaseVendorDataService\PurchaseVendorDataService.csproj" />
+    <Folder Include="BuildOutput\" />
+    <Folder Include="PurchaseVendorAppService\" />
   </ItemGroup>
 
 </Project>

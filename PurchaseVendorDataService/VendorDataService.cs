@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Linq;
 
 namespace PurchaseVendorDataService
 {
@@ -13,7 +14,7 @@ namespace PurchaseVendorDataService
 
         public VendorDataService()
         {
-            Vendor nescafe = new Vendor
+            Vendor nescafe = new Vendor // populate 1
             {
                 VendorID = Guid.NewGuid(),
                 VendorName = "NESCAFE",
@@ -22,7 +23,7 @@ namespace PurchaseVendorDataService
                 ContactEmail = "account@nescafe.com.ph"
             };
 
-            Vendor rebisco = new Vendor
+            Vendor rebisco = new Vendor // populate 2
             {
                 VendorID = Guid.NewGuid(),
                 VendorName = "REBISCO",
@@ -31,7 +32,7 @@ namespace PurchaseVendorDataService
                 ContactEmail = "account@rebisco.com.ph"
             };
 
-            Vendor sanmig = new Vendor
+            Vendor sanmig = new Vendor // populate 3
             {
                 VendorID = Guid.NewGuid(),
                 VendorName = "SAN MIGUEL CORPORATION",
@@ -40,7 +41,7 @@ namespace PurchaseVendorDataService
                 ContactEmail = "account@sanmigcorp.com.ph"
             };
 
-            Vendor nestle = new Vendor
+            Vendor nestle = new Vendor // populate 4
             {
                 VendorID = Guid.NewGuid(),
                 VendorName = "NESTLE",
@@ -49,7 +50,7 @@ namespace PurchaseVendorDataService
                 ContactEmail = "account@nestle.com.ph"
             };
 
-            Vendor oishi = new Vendor
+            Vendor oishi = new Vendor // populate 5
             {
                 VendorID = Guid.NewGuid(),
                 VendorName = "OISHI",
@@ -68,6 +69,38 @@ namespace PurchaseVendorDataService
         public void AddV(Vendor vendor)
         {
             vendors.Add(vendor);
+        }
+
+        public Vendor? GetById(Guid id) // foreach a in List<Vendor>, first found instance of Guid id (VendorID) is returned
+        {
+            return vendors.FirstOrDefault(a => a.VendorID == id);
+        }
+
+        public Vendor? GetByVendorName(string vendor) // foreach a in List<Vendor>, first found instance of said query (vendor) is returned
+        {
+            return vendors.FirstOrDefault(a => a.VendorName == vendor);
+        }
+
+        public bool VendorExists(string vendor) // compare if inputted string vendor returns true when there is an equal to it "=="
+        {
+            return vendors.Any(a => a.VendorName == vendor);
+        }
+
+        public void Update(Vendor vendor)
+        {
+            var existing = GetById(vendor.VendorID);
+            if (existing != null)
+            {
+                existing.VendorName = vendor.VendorName;
+                existing.VendorDescription = vendor.VendorDescription;
+                existing.ContactPhone = vendor.ContactPhone;
+                existing.ContactEmail = vendor.ContactEmail;
+            }
+        }
+
+        public List<Vendor> GetVendors()
+        {
+            return vendors;
         }
 
     }
