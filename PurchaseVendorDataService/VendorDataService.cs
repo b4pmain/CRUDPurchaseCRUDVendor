@@ -98,9 +98,20 @@ namespace PurchaseVendorDataService
             }
         }
 
+        public void RemoveV(string vendorName) // remove vendor object from the list by name
+        { 
+            vendors.Remove(vendors.First(a => a.VendorName == vendorName));
+        }
+
         public List<Vendor> GetVendors()
         {
             return vendors;
+        }
+
+        public int GetVendorCount()
+        {
+            int count = vendors.Count;
+            return count;
         }
 
     }

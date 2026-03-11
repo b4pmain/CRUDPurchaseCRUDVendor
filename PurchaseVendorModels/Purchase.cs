@@ -10,7 +10,7 @@ namespace PurchaseVendorModels
         public string PurchaseVndr { get; set; }
         public string PurchaseName { get; set; }
         public int PurchaseQty { get; set; }
-        public float PurchasePrice { get; set; }
+        public double PurchasePrice { get; set; }
         public string PurchaseDate { get; set; }
 
     }

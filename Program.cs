@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Collections.Specialized;
+using System.Threading.Channels;
+using PurchaseVendorAppService;
+using PurchaseVendorModels;
 
 // re-writing code for better logic and structure
 
@@ -8,6 +12,9 @@ namespace CRUDPurchaseCRUDVendor
     {
         static List<string> purchase = new List<string>();
         static List<string> vendor = new List<string>();
+
+        static PurVenAppService pvAppService = new PurVenAppService();
+
         static bool OnSession = true;
         static void Main(string[] args)
         {
@@ -33,7 +40,7 @@ namespace CRUDPurchaseCRUDVendor
             switch (userChoice.ToLower())
             {
                 case "add":
-                    addVendor();
+                    addOpt();
                     OnSession = false;
                     break;
                 case "search":
@@ -61,7 +68,7 @@ namespace CRUDPurchaseCRUDVendor
             }
         }
 
-        static void separator() // design
+        static void separator() // design separator
         {
             Console.WriteLine("-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-");
         }
@@ -69,18 +76,29 @@ namespace CRUDPurchaseCRUDVendor
         static void printTable()
         {
             separator();
-            int count = vendor.Count();
-            Console.WriteLine("Vendor & Purchase List:");
-            if (count != 0) { 
-                for (int i = 0; i < count; i++)
-                {
-                    Console.WriteLine(vendor[i] + " | " + purchase[i]);
-                }
+            List<Vendor> vendors = pvAppService.GetVendors();
+            List<Purchase> purchases = pvAppService.GetAllPurchases();
+
+            Console.WriteLine("List of Vendors: ");
+            foreach (var vendor in vendors)
+            {
+                Console.WriteLine($"Vendor Name: {vendor.VendorName} " +
+                    $"| Description: {vendor.VendorDescription} " +
+                    $"| Contact: {vendor.ContactPhone} " +
+                    $"| Email: {vendor.ContactEmail}");
             }
-            else 
-            { 
-                Console.WriteLine("List is Empty.");
+            Console.WriteLine("");
+
+            Console.WriteLine("List of Purchase: ");
+            foreach (var purchase in purchases)
+            {
+                Console.WriteLine($"Purchase Vendor: {purchase.PurchaseVndr} " +
+                    $"| Purchase Name: {purchase.PurchaseName} " +
+                    $"| Qty: {purchase.PurchaseQty} " +
+                    $"| Price: {purchase.PurchasePrice} " +
+                    $"| Date: {purchase.PurchaseDate} ");
             }
+
             Menu();
         }
 
@@ -88,53 +106,131 @@ namespace CRUDPurchaseCRUDVendor
         {
             Console.WriteLine("Invalid Input. Please Try Again.");
         }
+        static void addOpt()
+        {
+            string addChoice;
 
+            while (true)
+            {
+                separator();
+                Console.WriteLine("Select a category to add from: \n[Vendor] | [Purchase] | [Exit]\n");
+                Console.Write("Input: ");
+                addChoice = Console.ReadLine();
+
+                if (addChoice != "")
+                {
+                    switch (addChoice.ToLower())
+                    {
+                        case "vendor":
+                            Console.WriteLine("Selected: [Vendor]");
+                            addVendor();
+                            break;
+                        case "purchase":
+                            Console.WriteLine("Selected: [Purchase]");
+                            addPrch();
+                            break;
+                        case "exit":
+                            Menu();
+                            break;
+                        default:
+                            Console.WriteLine("Invalid Choice.");
+                            continue;
+                    }
+                    break;
+                }
+
+                invalid();
+            }
+
+            Menu();
+        }
         static void addVendor()
         {
-            string vendorName;
-            int index;
+            string vendorName,
+                vendorDescription,
+                contactPhone,
+                contactEmail;
 
             while (true) 
             {
                 separator();
                 Console.Write("Enter Vendor Name: ");
                 vendorName = Console.ReadLine();
+                Console.Write("Enter Vendor Description: ");
+                vendorDescription = Console.ReadLine();
+                Console.Write("Enter Contact Number: ");
+                contactPhone = Console.ReadLine();
+                Console.Write("Enter Contact Email: ");
+                contactEmail = Console.ReadLine();
 
                 if (vendorName != "")
                 {
-                    Console.WriteLine($"Successfully added \"{vendorName}\".");
+                    Console.WriteLine($"Successfully added \"{vendorName}\" and its entries." +
+                        $"\nDescription: {vendorDescription}" +
+                        $"\nContact Phone: {contactPhone}" +
+                        $"\nContact Email: {contactEmail}");
                     break;
                 }
                 invalid();
             }
 
-            vendor.Add(vendorName);
-            index = vendor.IndexOf(vendorName);
-            addPrch(index, vendorName);
+            var newVendor = new Vendor 
+            { 
+                VendorName = vendorName, 
+                VendorDescription = vendorDescription, 
+                ContactPhone = contactPhone, 
+                ContactEmail = contactEmail
+            };
+
+            Menu();
         }
 
-        static void addPrch(int index, string vendorName)
+        static void addPrch()
         {
-            string purchaseName;
-            
+            string purchaseVndr,
+                purchaseName,
+                purchaseDate;
+
+            int purchaseQty;
+            double purchasePrice;
+
             while (true)
             {
                 separator();
-                Console.Write("Enter Purchase(s): ");
+                Console.Write("Enter Purchase: ");
                 purchaseName = Console.ReadLine();
+                Console.Write("Enter Vendor: ");
+                purchaseVndr = Console.ReadLine();
+                Console.Write("Enter Qty: ");
+                purchaseQty = Convert.ToInt32(Console.ReadLine());
+                Console.Write("Enter Price: ");
+                purchasePrice = Convert.ToDouble(Console.ReadLine());
+                Console.Write("Enter Date: ");
+                purchaseDate = Console.ReadLine();
 
                 if (purchaseName != "")
                 {
-                    Console.WriteLine($"Successfully added \"{purchaseName}\" into Vendor \"{vendorName}\".");
+                    Console.WriteLine($"Successfully added \"{purchaseName}\" and its entries." +
+                        $"\nVendor: {purchaseVndr}" +
+                        $"\nQuantity: {purchaseQty}" +
+                        $"\nPrice: {purchasePrice}" +
+                        $"\nDate: {purchaseDate}");
+
+                    var newPurchase = new Purchase
+                    {
+                        PurchaseName = purchaseName,
+                        PurchaseVndr = purchaseVndr,
+                        PurchaseQty = purchaseQty,
+                        PurchasePrice = purchasePrice,
+                        PurchaseDate = purchaseDate
+                    };
+
+                    pvAppService.AddPurchase(newPurchase);
                     break;
                 }
-
-                Console.WriteLine("No Input Detected, Putting \"Empty\" instead.");
-                purchase.Insert(index, "empty");
-                Menu();
+                invalid();
             }
 
-            purchase.Insert(index, purchaseName);
             Menu();
         }
 

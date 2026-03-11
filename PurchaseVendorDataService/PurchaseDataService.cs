@@ -18,7 +18,7 @@ namespace PurchaseVendorDataService
                 PurchaseVndr = "NESCAFE",
                 PurchaseName = "Nescafe 3 in 1 Pack",
                 PurchaseQty = 10,
-                PurchasePrice = 150.00f,
+                PurchasePrice = 150.00,
                 PurchaseDate = "2026-03-09"
             };
             Purchase cofTwoNescafe = new Purchase
@@ -27,7 +27,7 @@ namespace PurchaseVendorDataService
                 PurchaseVndr = "NESCAFE",
                 PurchaseName = "Nescafe Creamy Pack",
                 PurchaseQty = 20,
-                PurchasePrice = 300.00f,
+                PurchasePrice = 300.00,
                 PurchaseDate = "2026-03-09"
             };
 
@@ -73,12 +73,26 @@ namespace PurchaseVendorDataService
         {
             return purchase;
         }
-
-        public List<Purchase> PurchaseFromVendors(List<Purchase> product, string ven)
+        public List<Purchase> PurchaseFromVendors(string ven) // return purchase with specific vendors
         {
-            return product
+            return purchase
                 .Where(a => a.PurchaseVndr == ven)
                 .ToList();
+        }
+        public void RemovePurchase(string purName)
+        {
+            purchase.Remove(purchase.First(a => a.PurchaseName == purName));
+        }
+
+        public void RemoveAllPurchaseByVen(string purVndr)
+        {
+            purchase.RemoveAll(a => a.PurchaseName == purVndr);
+        }
+
+        public int GetPurchaseCount()
+        {
+            int count = purchase.Count;
+            return count;
         }
 
     }
