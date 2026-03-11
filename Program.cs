@@ -292,7 +292,7 @@ namespace CRUDPurchaseCRUDVendor
                             break;
                         case "vendor":
                             Console.WriteLine("Selected: [Vendor-Specific Purchase]");
-                            //srchPrchVen();
+                            srchPrchVen();
                             break;
                         case "all":
                             Console.WriteLine("Selected: [All Purchases]");
@@ -349,6 +349,7 @@ namespace CRUDPurchaseCRUDVendor
         static void srchPrch() // prch seaching
         {
             string prchName;
+            bool isExisting = false;
             List<Purchase> purchases = pvAppService.GetAllPurchases();
 
             while (true)
@@ -358,8 +359,9 @@ namespace CRUDPurchaseCRUDVendor
                 prchName = Console.ReadLine();
 
                 var vendorName = pvAppService.PurGetByVendorName(prchName);
+                isExisting = pvAppService.prchIsExisting(prchName);
 
-                if (purchase == null)
+                if (!isExisting)
                 {
                     Console.WriteLine($"Purchase \"{prchName}\" not found.");
                     break;
@@ -373,61 +375,41 @@ namespace CRUDPurchaseCRUDVendor
             }
             Menu();
         }
-        static void srchPrchVen()
+        static void srchPrchVen() // all purchases from vendor
         {
-            string prchName;
-            List<Purchase> purchases = pvAppService.GetAllPurchases();
+            string venName;
+            bool isExisting = false;
 
             while (true)
             {
                 separator();
-                Console.Write("Enter Purchase Name: ");
-                prchName = Console.ReadLine();
+                Console.Write("Enter Vendor Name: ");
+                venName = Console.ReadLine();
+                isExisting = pvAppService.venIsExisting(venName);
 
-                var vendorName = pvAppService.PurGetByVendorName(prchName);
-
-                if (purchase == null)
+                if (isExisting && venName != "")
                 {
-                    Console.WriteLine($"Purchase \"{prchName}\" not found.");
+                    Console.WriteLine($"List of \"{venName}\" Purchases: ");
                     break;
                 }
-                else
-                {
-                    Console.WriteLine($"Purchase \"{prchName}\" found under \"{vendorName.PurchaseVndr}\"");
-                    break;
-                }
+
+                invalid();
 
             }
-            Menu();
-        }
 
-        static void srchPrchVen(string prchName)
-        {
-            List<Purchase> purchases = pvAppService.GetAllPurchases();
-
-            while (true)
+            List<Purchase> vendorPurchase = pvAppService.PurchaseFromVendor(venName);
+            foreach (Purchase purchase in vendorPurchase)
             {
-                separator();
-                Console.Write("Enter Purchase Name: ");
-                prchName = Console.ReadLine();
-
-                var vendorName = pvAppService.PurGetByVendorName(prchName);
-
-                if (purchase == null)
-                {
-                    Console.WriteLine($"Purchase \"{prchName}\" not found.");
-                    break;
-                }
-                else
-                {
-                    Console.WriteLine($"Purchase \"{prchName}\" found under \"{vendorName.PurchaseVndr}\"");
-                    break;
-                }
-
+                Console.WriteLine($"Purchase Vendor: {purchase.PurchaseVndr} " +
+                    $"| Purchase Name: {purchase.PurchaseName} " +
+                    $"| Qty: {purchase.PurchaseQty} " +
+                    $"| Price: {purchase.PurchasePrice} " +
+                    $"| Date: {purchase.PurchaseDate} ");
             }
             Menu();
         }
-        static void srchPrchAll()
+
+        static void srchPrchAll() // all purchases
         {
             separator();
             List<Purchase> purchases = pvAppService.GetAllPurchases();
