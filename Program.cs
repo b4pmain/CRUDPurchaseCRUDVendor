@@ -332,6 +332,7 @@ namespace CRUDPurchaseCRUDVendor
                     {
                         Console.WriteLine($"Vendor \"{vendorName}\" found." +
                             $"\n[Product List]");
+                        srchPrchVen(vendorName);
                         // srchPrchVen
                         break;
                     }
@@ -408,7 +409,35 @@ namespace CRUDPurchaseCRUDVendor
             }
             Menu();
         }
+        static void srchPrchVen(string venName) // all purchases from vendor
+        {
+            bool isExisting = false;
 
+            while (true)
+            {
+                isExisting = pvAppService.venIsExisting(venName);
+
+                if (isExisting && venName != "")
+                {
+                    Console.WriteLine($"List of \"{venName}\" Purchases: ");
+                    break;
+                }
+
+                invalid();
+
+            }
+
+            List<Purchase> vendorPurchase = pvAppService.PurchaseFromVendor(venName);
+            foreach (Purchase purchase in vendorPurchase)
+            {
+                Console.WriteLine($"Purchase Vendor: {purchase.PurchaseVndr} " +
+                    $"| Purchase Name: {purchase.PurchaseName} " +
+                    $"| Qty: {purchase.PurchaseQty} " +
+                    $"| Price: {purchase.PurchasePrice} " +
+                    $"| Date: {purchase.PurchaseDate} ");
+            }
+            Menu();
+        }
         static void srchPrchAll() // all purchases
         {
             separator();
