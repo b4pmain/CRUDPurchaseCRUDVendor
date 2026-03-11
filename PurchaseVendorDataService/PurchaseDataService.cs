@@ -46,9 +46,9 @@ namespace PurchaseVendorDataService
             return purchase.FirstOrDefault(a => a.ProductID == id);
         }
 
-        public Purchase? GetByVendorName(string pur) // foreach a in List<Purchase>, first found instance of said query (pur) is returned
+        public Purchase? PurchaseGetByVndr(string pur)
         {
-            return purchase.FirstOrDefault(a => a.PurchaseName == pur);
+            return purchase.FirstOrDefault(a => a.PurchaseVndr == pur);
         }
 
         public bool PurchaseExists(string pur) // compare if inputted string vendor returns true when there is an equal to it "=="

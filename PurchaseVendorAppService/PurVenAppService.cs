@@ -57,6 +57,15 @@ namespace PurchaseVendorAppService
             return false;
         }
 
+        public bool venIsExisting(string vendorName)
+        {
+            var venSearch = vendorDataService.VendorExists(vendorName);
+            if (venSearch == null)
+                return false;
+
+            return venSearch;
+        }
+
         public List<Vendor> GetVendors()
         {
             return vendorDataService.GetVendors(); 
@@ -118,7 +127,15 @@ namespace PurchaseVendorAppService
         {
             return purchaseDataService.GetAllPurchases();
         }
+        public Purchase? PurGetByVendorName(string prchName)
+        {
+            var purchase = GetAllPurchases().FirstOrDefault(a => a.PurchaseName == prchName);
 
+            if (purchase == null)
+                return null;
+
+            return purchaseDataService.PurchaseGetByVndr(purchase.PurchaseVndr);
+        }
         public List<Purchase> PurchaseFromVendor(Vendor vendor)
         {
             if (!vendorDataService.VendorExists(vendor.VendorName))
