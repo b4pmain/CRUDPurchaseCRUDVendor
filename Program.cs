@@ -16,8 +16,6 @@ namespace CRUDPurchaseCRUDVendor
         static bool OnSession = true;
         static void Main(string[] args)
         {
-            Purchases(); // initialize sample purchases
-            Vendors(); // initialize sample vendors
             while (OnSession)
             {
                 Menu();
@@ -77,26 +75,46 @@ namespace CRUDPurchaseCRUDVendor
             List<Vendor> vendors = pvAppService.GetVendors();
             List<Purchase> purchases = pvAppService.GetAllPurchases();
 
+            int venCount, purCount;
+            venCount = pvAppService.VenCount();
+            purCount = pvAppService.PurCount();
+
+            bool hasVen = venCount > 0;
+            bool hasPur = purCount > 0;
+
             Console.WriteLine("[List of Vendors]");
-            foreach (var vendor in vendors)
+            if (hasVen)
             {
-                Console.WriteLine($"Vendor Name: {vendor.VendorName} " +
-                    $"| Description: {vendor.VendorDescription} " +
-                    $"| Contact: {vendor.ContactPhone} " +
-                    $"| Email: {vendor.ContactEmail}");
+                foreach (var vendor in vendors)
+                {
+                    Console.WriteLine($"Vendor Name: {vendor.VendorName} " +
+                        $"| Description: {vendor.VendorDescription} " +
+                        $"| Contact: {vendor.ContactPhone} " +
+                        $"| Email: {vendor.ContactEmail}");
+                }
+            }
+            else
+            {
+                Console.WriteLine("List is Empty.");
             }
             Console.WriteLine("");
 
             Console.WriteLine("[List of Purchase]");
-            foreach (var purchase in purchases)
+            if (hasPur)
             {
-                Console.WriteLine($"Purchase Vendor: {purchase.PurchaseVndr} " +
-                    $"| Purchase Name: {purchase.PurchaseName} " +
-                    $"| Qty: {purchase.PurchaseQty} " +
-                    $"| Price: {purchase.PurchasePrice} " +
-                    $"| Date: {purchase.PurchaseDate} ");
+                foreach (var purchase in purchases)
+                {
+                    Console.WriteLine($"Purchase Vendor: {purchase.PurchaseVndr} " +
+                        $"| Purchase Name: {purchase.PurchaseName} " +
+                        $"| Qty: {purchase.PurchaseQty} " +
+                        $"| Price: {purchase.PurchasePrice} " +
+                        $"| Date: {purchase.PurchaseDate} ");
+                }
             }
-
+            else
+            {
+                Console.WriteLine("List is Empty.");
+            }
             Menu();
         }
 
@@ -149,19 +167,23 @@ namespace CRUDPurchaseCRUDVendor
                 contactPhone,
                 contactEmail;
 
+            bool isExisting;
+
             while (true) 
             {
                 separator();
                 Console.Write("Enter Vendor Name: ");
                 vendorName = Console.ReadLine();
+                vendorName.ToUpper();
                 Console.Write("Enter Vendor Description: ");
                 vendorDescription = Console.ReadLine();
                 Console.Write("Enter Contact Number: ");
                 contactPhone = Console.ReadLine();
                 Console.Write("Enter Contact Email: ");
                 contactEmail = Console.ReadLine();
+                isExisting = pvAppService.venIsExisting(vendorName);
 
-                if (vendorName != "")
+                if (vendorName != "" && vendorDescription != "" && contactPhone != "" && contactEmail != "" && !isExisting)
                 {
                     Console.WriteLine($"Successfully added \"{vendorName}\" and its entries." +
                         $"\nDescription: {vendorDescription}" +
@@ -170,6 +192,7 @@ namespace CRUDPurchaseCRUDVendor
                     break;
                 }
                 invalid();
+                Console.WriteLine($"Double Check if Vendor \"{vendorName}\" is a duplicate.");
             }
 
             var newVendor = new Vendor 
@@ -179,6 +202,8 @@ namespace CRUDPurchaseCRUDVendor
                 ContactPhone = contactPhone, 
                 ContactEmail = contactEmail
             };
+
+            pvAppService.AddVendor(newVendor);
 
             Menu();
         }
@@ -192,6 +217,8 @@ namespace CRUDPurchaseCRUDVendor
             int purchaseQty;
             double purchasePrice;
 
+            bool isExisting;
+
             while (true)
             {
                 separator();
@@ -199,14 +226,16 @@ namespace CRUDPurchaseCRUDVendor
                 purchaseName = Console.ReadLine();
                 Console.Write("Enter Vendor: ");
                 purchaseVndr = Console.ReadLine();
+                purchaseVndr.ToUpper();
                 Console.Write("Enter Qty: ");
                 purchaseQty = Convert.ToInt32(Console.ReadLine());
                 Console.Write("Enter Price: ");
                 purchasePrice = Convert.ToDouble(Console.ReadLine());
                 Console.Write("Enter Date: ");
                 purchaseDate = Console.ReadLine();
+                isExisting = pvAppService.prchIsExisting(purchaseName);
 
-                if (purchaseName != "")
+                if (purchaseVndr != "" && purchaseName != "" && purchaseDate != "" && purchaseQty != null && purchasePrice != null && !isExisting)
                 {
                     Console.WriteLine($"Successfully added \"{purchaseName}\" and its entries." +
                         $"\nVendor: {purchaseVndr}" +
@@ -227,6 +256,7 @@ namespace CRUDPurchaseCRUDVendor
                     break;
                 }
                 invalid();
+                Console.WriteLine($"Double Check if Purchase \"{purchaseName}\" is a duplicate.");
             }
 
             Menu();
@@ -324,6 +354,7 @@ namespace CRUDPurchaseCRUDVendor
                 separator();
                 Console.Write("Search for Vendor Name: ");
                 vendorName = Console.ReadLine();
+                vendorName.ToUpper();
 
                 if (vendorName != "")
                 {
@@ -378,19 +409,20 @@ namespace CRUDPurchaseCRUDVendor
         }
         static void srchPrchVen() // all purchases from vendor
         {
-            string venName;
+            string vendorName;
             bool isExisting = false;
 
             while (true)
             {
                 separator();
                 Console.Write("Enter Vendor Name: ");
-                venName = Console.ReadLine();
-                isExisting = pvAppService.venIsExisting(venName);
+                vendorName = Console.ReadLine();
+                vendorName.ToUpper();
+                isExisting = pvAppService.venIsExisting(vendorName);
 
-                if (isExisting && venName != "")
+                if (isExisting && vendorName != "")
                 {
-                    Console.WriteLine($"List of \"{venName}\" Purchases: ");
+                    Console.WriteLine($"List of \"{vendorName}\" Purchases: ");
                     break;
                 }
 
@@ -398,7 +430,7 @@ namespace CRUDPurchaseCRUDVendor
 
             }
 
-            List<Purchase> vendorPurchase = pvAppService.PurchaseFromVendor(venName);
+            List<Purchase> vendorPurchase = pvAppService.PurchaseFromVendor(vendorName);
             foreach (Purchase purchase in vendorPurchase)
             {
                 Console.WriteLine($"Purchase Vendor: {purchase.PurchaseVndr} " +
@@ -409,7 +441,7 @@ namespace CRUDPurchaseCRUDVendor
             }
             Menu();
         }
-        static void srchPrchVen(string venName) // all purchases from vendor
+        static void srchPrchVen(string venName) // all purchases from vendor (after selecting the ven option)
         {
             bool isExisting = false;
 
@@ -494,8 +526,13 @@ namespace CRUDPurchaseCRUDVendor
 
         static void updVendor()
         {
-            string vendorName, vendorReplace;
-            int index;
+            string vendorName, 
+                vendorReplace,
+                vendorDescription,
+                contactPhone,
+                contactEmail;
+
+            bool venIsExisting, isSuccess;
 
             while (true)
             {
@@ -505,16 +542,33 @@ namespace CRUDPurchaseCRUDVendor
 
                 if (vendorName != "")
                 {
-                    if (vendor.Contains(vendorName))
+                    venIsExisting = pvAppService.venIsExisting(vendorName);
+                    if (venIsExisting)
                     {
-                        index = vendor.IndexOf(vendorName);
-                        Console.Write($"Update \"{vendorName}\" with?: ");
-                        vendorReplace = Console.ReadLine();
+                        Console.WriteLine($"Found Vendor \"{vendorName}\".");
+                        Console.Write("Enter Vendor Description: ");
+                        vendorDescription = Console.ReadLine();
+                        Console.Write("Enter Contact Number: ");
+                        contactPhone = Console.ReadLine();
+                        Console.Write("Enter Contact Email: ");
+                        contactEmail = Console.ReadLine();
 
-                        if (vendorReplace != "")
+                        if (vendorDescription != "" && contactPhone != "" && contactEmail != "")
                         {
-                            Console.WriteLine($"Successfully replaced \"{vendorName}\" with \"{vendorReplace}\".");
-                            vendor[index] = vendorReplace;
+                            isSuccess = pvAppService.ChangeInfo(vendorName, vendorDescription, contactPhone, contactEmail);
+
+                            if (isSuccess)
+                            {
+                                Console.WriteLine($"Successfully updated \"{vendorName}\"." +
+                                    $"\nDescription: {vendorDescription}" +
+                                    $"\nContact Phone: {contactPhone}" +
+                                    $"\nContact Email: {contactEmail}");
+                            }
+                            else
+                            {
+                                Console.WriteLine($"Failed updating \"{vendorName}\".");
+                            }
+
                             break;
                         }
 
@@ -532,32 +586,60 @@ namespace CRUDPurchaseCRUDVendor
             Menu();
         }
 
-        static void updPrch() // prch seaching
+        static void updPrch() // prch update
         {
-            string prchName, vendorName;
-            int index;
+            string prchName,
+                prchVendor,
+                prchDate;
+
+            int prchQty;
+            double prchPrice;
+
+            bool purIsExisting, isSuccess;
 
             while (true)
             {
                 separator();
-                Console.Write("Enter Vendor's Name: ");
-                vendorName = Console.ReadLine();
+                Console.Write("Enter Purchase: ");
+                prchName = Console.ReadLine();
 
-                if (vendorName != "")
+                if (prchName != "")
                 {
-                    if (vendor.Contains(vendorName)) // proceed to purchase update
+                    purIsExisting = pvAppService.prchIsExisting(prchName);
+
+                    if (purIsExisting) // proceed to purchase update
                     {
 
                         while (true)
                         {
-                            index = vendor.IndexOf(vendorName);
-                            Console.Write("Input Purchase: ");
-                            prchName = Console.ReadLine();
+                            Console.WriteLine($"Found Purchase \"{prchName}\".");
+                            Console.Write("Enter Vendor: ");
+                            prchVendor = Console.ReadLine();
+                            Console.Write("Enter Qty: ");
+                            prchQty = Convert.ToInt32(Console.ReadLine());
+                            Console.Write("Enter Price: ");
+                            prchPrice = Convert.ToDouble(Console.ReadLine());
+                            Console.Write("Enter Date: ");
+                            prchDate = Console.ReadLine();
 
-                            if (prchName != "") // validity checking if not empty
+                            if (prchVendor != "" && prchQty != null && prchPrice != null && prchDate != "") // validity checking if not empty
                             {
-                                Console.WriteLine($"Successfully updated Purchase \"{purchase[index]}\" to \"{prchName}\" in Vendor \"{vendorName}\".");
-                                purchase.Insert(index, prchName);
+
+                                isSuccess = pvAppService.ChangePur(prchName, prchVendor, prchQty, prchPrice, prchDate);
+
+                                if (isSuccess)
+                                {
+                                    Console.WriteLine($"Successfully updated \"{prchName}\" and its entries." +
+                                    $"\nVendor: {prchVendor}" +
+                                    $"\nQuantity: {prchQty}" +
+                                    $"\nPrice: {prchPrice}" +
+                                    $"\nDate: {prchDate}");
+                                }
+                                else
+                                {
+                                    Console.WriteLine($"Failed updating \"{prchName}\".");
+                                }
+
                                 break;
                             }
 
@@ -568,7 +650,7 @@ namespace CRUDPurchaseCRUDVendor
                     }
                     else
                     {
-                        Console.WriteLine($"Vendor \"{vendorName}\" not found.");
+                        Console.WriteLine($"Purchase \"{prchName}\" not found.");
                         break;
                     }
                 }
@@ -624,8 +706,8 @@ namespace CRUDPurchaseCRUDVendor
 
         static void delVendor()
         {
-            string vendorName, vendorReplace, choice;
-            int index;
+            string vendorName, choice;
+            bool isExisting, hasRemovedVendor;
 
             while (true)
             {
@@ -635,9 +717,10 @@ namespace CRUDPurchaseCRUDVendor
 
                 if (vendorName != "")
                 {
-                    if (vendor.Contains(vendorName))
+                    isExisting = pvAppService.venIsExisting(vendorName);
+
+                    if (isExisting)
                     {
-                        index = vendor.IndexOf(vendorName);
                         Console.WriteLine($"Do you want to delete Vendor \"{vendorName}\"? This will also delete all of its purchases.\n[Y] or [N]\n");
                         Console.Write("Input: ");
                         choice = Console.ReadLine();
@@ -645,9 +728,17 @@ namespace CRUDPurchaseCRUDVendor
                         switch (choice.ToLower())
                         {
                             case "y":
+                                var vendor = new Vendor();
+                                vendor.VendorName = vendorName;
+
+                                hasRemovedVendor = pvAppService.RemoveVendor(vendor);
+
+                                if (!hasRemovedVendor)
+                                {
+                                    Console.WriteLine($"Deletion of Vendor \"{vendorName}\" has failed.");
+                                }
+
                                 Console.WriteLine($"Deletion of Vendor \"{vendorName}\" is successful.");
-                                vendor.RemoveAt(index);
-                                purchase.RemoveAt(index);
                                 break;
                             case "n":
                                 Console.WriteLine("Cancelling Deletion. Returning to Menu.");
@@ -672,67 +763,57 @@ namespace CRUDPurchaseCRUDVendor
 
         static void delPrch()
         {
-            string prchName, vendorName, choice;
-            int index;
+            string purchaseName, choice;
+            bool isExisting, hasRemovedPrch;
 
             while (true)
             {
                 separator();
-                Console.Write("Enter Vendor's Name: ");
-                vendorName = Console.ReadLine();
+                Console.Write("Search for Vendor Name: ");
+                purchaseName = Console.ReadLine();
 
-                if (vendorName != "")
+                if (purchaseName != "")
                 {
-                    index = vendor.IndexOf(vendorName);
-                    if (vendor.Contains(vendorName))
+                    isExisting = pvAppService.prchIsExisting(purchaseName);
+
+                    if (isExisting)
                     {
-                        while (true)
+                        Console.WriteLine($"Do you want to delete Purchase \"{purchaseName}\"?\n[Y] or [N]\n");
+                        Console.Write("Input: ");
+                        choice = Console.ReadLine();
+
+                        switch (choice.ToLower())
                         {
-                            if (!purchase[index].Equals("empty"))
-                            {
-                                Console.Write("Enter Purchase: ");
-                                prchName = Console.ReadLine();
+                            case "y":
+                                var purchase = new Purchase();
+                                purchase.PurchaseName = purchaseName;
 
-                                if (prchName != "")
+                                hasRemovedPrch = pvAppService.RemovePurchase(purchase);
+
+                                if (!hasRemovedPrch)
                                 {
-                                    Console.WriteLine($"Do you want to delete the Purchase \"{prchName}\"?\n[Y] or [N]\n");
-                                    Console.Write("Input: ");
-                                    choice = Console.ReadLine();
-
-                                    switch (choice.ToLower())
-                                    {
-                                        case "y":
-                                            Console.WriteLine($"Deletion of Purchase \"{prchName}\" is successful.");
-                                            purchase[index] = "empty";
-                                            break;
-                                        case "n":
-                                            Console.WriteLine("Cancelling Deletion. Returning to Menu.");
-                                            break;
-                                        default:
-                                            Console.WriteLine("Invalid Choice.");
-                                            continue;
-                                    }
-                                    break;
+                                    Console.WriteLine($"Deletion of Vendor \"{purchaseName}\" has failed.");
                                 }
-                            }
-                            else
-                            {
-                                Console.WriteLine($"Purchase list of \"{vendorName}\" is already Empty. Returning to Main menu.");
-                                break;
-                            }
-                        }
 
+                                Console.WriteLine($"Deletion of Vendor \"{purchaseName}\" is successful.");
+                                break;
+                            case "n":
+                                Console.WriteLine("Cancelling Deletion. Returning to Menu.");
+                                break;
+                            default:
+                                Console.WriteLine("Invalid Choice.");
+                                continue;
+                        }
                         break;
+
                     }
                     else
                     {
-                        Console.WriteLine($"Vendor \"{vendorName}\" not found.");
+                        Console.WriteLine($"Vendor \"{purchaseName}\" not found.");
                         break;
                     }
                 }
-
                 invalid();
-
             }
             Menu();
         }
@@ -740,9 +821,14 @@ namespace CRUDPurchaseCRUDVendor
         static void delAll()
         {
             string choice;
-            int count = vendor.Count();
 
-            if (count != 0)
+            int venCount, purCount;
+            venCount = pvAppService.VenCount();
+            purCount = pvAppService.PurCount();
+
+            bool isVenSuccess, isPurSuccess;
+
+            if (venCount > 0 || purCount > 0)
             {
                 while (true)
                 {
@@ -754,9 +840,16 @@ namespace CRUDPurchaseCRUDVendor
                     switch (choice)
                     {
                         case "y":
-                            Console.WriteLine("Operation Successful.");
-                            purchase.Clear();
-                            vendor.Clear();
+                            isVenSuccess = pvAppService.RemoveAllPur();
+                            isPurSuccess = pvAppService.RemoveAllVen();
+
+                            if (isVenSuccess && isPurSuccess)
+                            {
+                                Console.WriteLine("Operation Successful.");
+                                break;
+                            }
+                            Console.WriteLine("Operation unsuccessful.");
+                            
                             break;
                         case "n":
                             Console.WriteLine("Operation Cancelled. Returning to Menu.");
@@ -774,15 +867,6 @@ namespace CRUDPurchaseCRUDVendor
                 Console.WriteLine("List is Empty, this Operation cannot be done.");
                 Menu();
             }
-        }
-        static void Vendors()
-        {
-
-        }
-
-        static void Purchases()
-        {
-
         }
 
     }

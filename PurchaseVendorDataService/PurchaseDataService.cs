@@ -46,6 +46,10 @@ namespace PurchaseVendorDataService
             return purchase.FirstOrDefault(a => a.ProductID == id);
         }
 
+        public Purchase? PurchaseGetByName(string pur)
+        {
+            return purchase.FirstOrDefault(a => a.PurchaseName == pur);
+        }
         public Purchase? PurchaseGetByVndr(string pur)
         {
             return purchase.FirstOrDefault(a => a.PurchaseVndr == pur);
@@ -86,7 +90,12 @@ namespace PurchaseVendorDataService
 
         public void RemoveAllPurchaseByVen(string purVndr)
         {
-            purchase.RemoveAll(a => a.PurchaseName == purVndr);
+            purchase.RemoveAll(a => a.PurchaseVndr == purVndr);
+        }
+
+        public void RemoveAllPur()
+        {
+            purchase.Clear();
         }
 
         public int GetPurchaseCount()

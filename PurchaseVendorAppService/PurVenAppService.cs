@@ -42,11 +42,16 @@ namespace PurchaseVendorAppService
             return true;
         }
 
+        public bool RemoveAllVen()
+        {
+            vendorDataService.RemoveAllVen();
+            return true;
+        }
         public bool ChangeInfo(string vendorName, string vendorDescription, string contactPhone, string contactEmail)
         {
             var existing = vendorDataService.GetByVendorName(vendorName);
 
-            if (existing != null)
+            if (existing == null)
                 return false;
 
             existing.VendorDescription = vendorDescription;
@@ -54,7 +59,7 @@ namespace PurchaseVendorAppService
             existing.ContactEmail = contactEmail;
 
             vendorDataService.Update(existing);
-            return false;
+            return true;
         }
 
         public bool venIsExisting(string vendorName)
@@ -78,11 +83,13 @@ namespace PurchaseVendorAppService
 
         public int VenCount()
         {
-            int count = purchaseDataService.GetPurchaseCount();
+            int count = vendorDataService.GetVendorCount();
             return count;
         }
 
-        // PURCHASE
+        // PURCHASE =============================================================================== PURCHASE //
+        // PURCHASE =============================================================================== PURCHASE //
+        // PURCHASE =============================================================================== PURCHASE //
 
         public bool AddPurchase(Purchase newPurchase)
         {
@@ -100,6 +107,22 @@ namespace PurchaseVendorAppService
             };
 
             purchaseDataService.AddP(purchase);
+            return true;
+        }
+
+        public bool ChangePur(string purchaseName, string purchaseVndr, int purchaseQty, double purchasePrice, string purchaseDate)
+        {
+            var existing = purchaseDataService.PurchaseGetByName(purchaseName);
+
+            if (existing == null)
+                return false;
+
+            existing.PurchaseVndr = purchaseVndr;
+            existing.PurchaseQty = purchaseQty;
+            existing.PurchasePrice = purchasePrice;
+            existing.PurchaseDate = purchaseDate;
+
+            purchaseDataService.Update(existing);
             return true;
         }
 
@@ -122,13 +145,9 @@ namespace PurchaseVendorAppService
             return purSearch;
         }
 
-        public bool RemoveAllPurchase(Purchase pur)
+        public bool RemoveAllPur()
         {
-            if (!purchaseDataService.PurchaseExists(pur.PurchaseVndr))
-                return false;
-
-            String purchaseVndr = pur.PurchaseVndr;
-            purchaseDataService.RemoveAllPurchaseByVen(purchaseVndr);
+            purchaseDataService.RemoveAllPur();
             return true;
         }
 

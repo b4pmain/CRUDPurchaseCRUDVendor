@@ -102,7 +102,10 @@ namespace PurchaseVendorDataService
         { 
             vendors.Remove(vendors.First(a => a.VendorName == vendorName));
         }
-
+        public void RemoveAllVen()
+        {
+            vendors.Clear();
+        }
         public List<Vendor> GetVendors()
         {
             return vendors;
