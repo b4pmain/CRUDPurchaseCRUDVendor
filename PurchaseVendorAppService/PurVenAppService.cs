@@ -9,8 +9,8 @@ namespace PurchaseVendorAppService
 {
     public class PurVenAppService
     {
-        VendorDataService vendorDataService = new VendorDataService();
-        PurchaseDataService purchaseDataService = new PurchaseDataService();
+        VendorDataService vendorDataService = new VendorDataService(new VendorDBData()); /* VendorDBData/VendorJsonData/VendorInMemData */
+        PurchaseDataService purchaseDataService = new PurchaseDataService(new PurchaseDBData()); /* PurchaseDBData/PurchaseJsonData/PurchaseInMemData */
 
         // VENDOR
         public bool AddVendor(Vendor newVendor)
@@ -21,7 +21,7 @@ namespace PurchaseVendorAppService
             var vendor = new Vendor
             {
                 VendorID = Guid.NewGuid(),
-                VendorName = newVendor.VendorName,
+                VendorName = newVendor.VendorName.ToUpper(),
                 VendorDescription = newVendor.VendorDescription,
                 ContactPhone = newVendor.ContactPhone,
                 ContactEmail = newVendor.ContactEmail
@@ -37,8 +37,8 @@ namespace PurchaseVendorAppService
                 return false;
 
             String vendorName = vendor.VendorName;
-            vendorDataService.RemoveV(vendorName);
-            purchaseDataService.RemoveAllPurchaseByVen(vendorName); // deleting vendor also deletes all of its products
+            vendorDataService.RemoveV(vendorName.ToUpper());
+            purchaseDataService.RemoveAllPurchaseByVen(vendorName.ToUpper()); // deleting vendor also deletes all of its products
             return true;
         }
 
@@ -99,7 +99,7 @@ namespace PurchaseVendorAppService
             var purchase = new Purchase
             {
                 ProductID = Guid.NewGuid(),
-                PurchaseVndr = newPurchase.PurchaseVndr,
+                PurchaseVndr = newPurchase.PurchaseVndr.ToUpper(),
                 PurchaseName = newPurchase.PurchaseName,
                 PurchaseQty = newPurchase.PurchaseQty,
                 PurchasePrice = newPurchase.PurchasePrice,
@@ -117,7 +117,7 @@ namespace PurchaseVendorAppService
             if (existing == null)
                 return false;
 
-            existing.PurchaseVndr = purchaseVndr;
+            existing.PurchaseVndr = purchaseVndr.ToUpper();
             existing.PurchaseQty = purchaseQty;
             existing.PurchasePrice = purchasePrice;
             existing.PurchaseDate = purchaseDate;

@@ -10,111 +10,53 @@ namespace PurchaseVendorDataService
 {
     public class VendorDataService
     {
-        public List<Vendor> vendors = new List<Vendor>();
-
-        public VendorDataService()
+        IVendorDataService _vendorDataService;
+        public VendorDataService(IVendorDataService vendorDataService)
         {
-            Vendor nescafe = new Vendor // populate 1
-            {
-                VendorID = Guid.NewGuid(),
-                VendorName = "NESCAFE",
-                VendorDescription = "Coffee Maker Brand",
-                ContactPhone = "0912345678",
-                ContactEmail = "account@nescafe.com.ph"
-            };
-
-            Vendor rebisco = new Vendor // populate 2
-            {
-                VendorID = Guid.NewGuid(),
-                VendorName = "REBISCO",
-                VendorDescription = "Maker of Biscuits",
-                ContactPhone = "0912345678",
-                ContactEmail = "account@rebisco.com.ph"
-            };
-
-            Vendor sanmig = new Vendor // populate 3
-            {
-                VendorID = Guid.NewGuid(),
-                VendorName = "SAN MIGUEL CORPORATION",
-                VendorDescription = "Beverage Brand",
-                ContactPhone = "0912345678",
-                ContactEmail = "account@sanmigcorp.com.ph"
-            };
-
-            Vendor nestle = new Vendor // populate 4
-            {
-                VendorID = Guid.NewGuid(),
-                VendorName = "NESTLE",
-                VendorDescription = "Variety Goods Maker",
-                ContactPhone = "0912345678",
-                ContactEmail = "account@nestle.com.ph"
-            };
-
-            Vendor oishi = new Vendor // populate 5
-            {
-                VendorID = Guid.NewGuid(),
-                VendorName = "OISHI",
-                VendorDescription = "Chip Making Brand",
-                ContactPhone = "0912345678",
-                ContactEmail = "account@oishi.com.ph"
-            };
-
-            vendors.Add(nescafe);
-            vendors.Add(rebisco);
-            vendors.Add(sanmig);
-            vendors.Add(nestle);
-            vendors.Add(oishi);
+            _vendorDataService = vendorDataService;
         }
 
         public void AddV(Vendor vendor)
         {
-            vendors.Add(vendor);
+            _vendorDataService.AddV(vendor);
         }
 
-        public Vendor? GetById(Guid id) // foreach a in List<Vendor>, first found instance of Guid id (VendorID) is returned
+        public Vendor? GetById(Guid id)
         {
-            return vendors.FirstOrDefault(a => a.VendorID == id);
+            return _vendorDataService.GetById(id);
         }
 
-        public Vendor? GetByVendorName(string vendor) // foreach a in List<Vendor>, first found instance of said query (vendor) is returned
+        public Vendor? GetByVendorName(string vendor)
         {
-            return vendors.FirstOrDefault(a => a.VendorName == vendor);
+            return _vendorDataService.GetByVendorName(vendor);
         }
 
-        public bool VendorExists(string vendor) // compare if inputted string vendor returns true when there is an equal to it "=="
+        public bool VendorExists(string vendor)
         {
-            return vendors.Any(a => a.VendorName == vendor);
+            return _vendorDataService.VendorExists(vendor);
         }
 
         public void Update(Vendor vendor)
         {
-            var existing = GetById(vendor.VendorID);
-            if (existing != null)
-            {
-                existing.VendorName = vendor.VendorName;
-                existing.VendorDescription = vendor.VendorDescription;
-                existing.ContactPhone = vendor.ContactPhone;
-                existing.ContactEmail = vendor.ContactEmail;
-            }
+            _vendorDataService.Update(vendor);
         }
 
-        public void RemoveV(string vendorName) // remove vendor object from the list by name
-        { 
-            vendors.Remove(vendors.First(a => a.VendorName == vendorName));
+        public void RemoveV(string vendorName)
+        {
+            _vendorDataService.RemoveV(vendorName);
         }
         public void RemoveAllVen()
         {
-            vendors.Clear();
+            _vendorDataService.RemoveAllVen();
         }
         public List<Vendor> GetVendors()
         {
-            return vendors;
+            return _vendorDataService.GetVendors();
         }
 
         public int GetVendorCount()
         {
-            int count = vendors.Count;
-            return count;
+            return _vendorDataService.GetVendorCount();
         }
 
     }

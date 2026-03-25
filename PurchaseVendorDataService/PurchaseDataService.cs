@@ -8,100 +8,67 @@ namespace PurchaseVendorDataService
 {
     public class PurchaseDataService
     {
-        public List<Purchase> purchase = new List<Purchase>();
-
-        public PurchaseDataService()
+        IPurchaseDataService _purchaseDataService;
+        public PurchaseDataService(IPurchaseDataService purchaseDataService)
         {
-            Purchase cofOneNescafe = new Purchase
-            {
-                ProductID = Guid.NewGuid(),
-                PurchaseVndr = "NESCAFE",
-                PurchaseName = "Nescafe 3 in 1 Pack",
-                PurchaseQty = 10,
-                PurchasePrice = 150.00,
-                PurchaseDate = "2026-03-09"
-            };
-            Purchase cofTwoNescafe = new Purchase
-            {
-                ProductID = Guid.NewGuid(),
-                PurchaseVndr = "NESCAFE",
-                PurchaseName = "Nescafe Creamy Pack",
-                PurchaseQty = 20,
-                PurchasePrice = 300.00,
-                PurchaseDate = "2026-03-09"
-            };
-
-            purchase.Add(cofOneNescafe);
-            purchase.Add(cofTwoNescafe);
-
+            _purchaseDataService = purchaseDataService;
         }
 
         public void AddP(Purchase pur)
         {
-            purchase.Add(pur);
+            _purchaseDataService.AddP(pur);
         }
 
         public Purchase? GetById(Guid id) // foreach a in List<Purchase>, first found instance of Guid id (ProductID) is returned
         {
-            return purchase.FirstOrDefault(a => a.ProductID == id);
+            return _purchaseDataService.GetById(id);
         }
 
         public Purchase? PurchaseGetByName(string pur)
         {
-            return purchase.FirstOrDefault(a => a.PurchaseName == pur);
+            return _purchaseDataService.PurchaseGetByName(pur);
         }
         public Purchase? PurchaseGetByVndr(string pur)
         {
-            return purchase.FirstOrDefault(a => a.PurchaseVndr == pur);
+            return _purchaseDataService.PurchaseGetByVndr(pur);
         }
 
         public bool PurchaseExists(string pur) // compare if inputted string vendor returns true when there is an equal to it "=="
         {
-            return purchase.Any(a => a.PurchaseName == pur);
+            return _purchaseDataService.PurchaseExists(pur);
         }
 
         public void Update(Purchase pur)
         {
-            var existing = GetById(pur.ProductID);
-            if (existing != null)
-            {
-                existing.PurchaseVndr = pur.PurchaseVndr;
-                existing.PurchaseName = pur.PurchaseName;
-                existing.PurchaseQty = pur.PurchaseQty;
-                existing.PurchasePrice = pur.PurchasePrice;
-                existing.PurchaseDate = pur.PurchaseDate;
-            }
+            _purchaseDataService.Update(pur);
         }
 
         public List<Purchase> GetAllPurchases()
         {
-            return purchase;
+            return _purchaseDataService.GetAllPurchases();
         }
         public List<Purchase> PurchaseFromVendors(string ven) // return purchase with specific vendors
         {
-            return purchase
-                .Where(a => a.PurchaseVndr == ven)
-                .ToList();
+            return _purchaseDataService.PurchaseFromVendors(ven);
         }
         public void RemovePurchase(string purName)
         {
-            purchase.Remove(purchase.First(a => a.PurchaseName == purName));
+            _purchaseDataService.RemovePurchase(purName);
         }
 
         public void RemoveAllPurchaseByVen(string purVndr)
         {
-            purchase.RemoveAll(a => a.PurchaseVndr == purVndr);
+            _purchaseDataService.RemoveAllPurchaseByVen(purVndr);
         }
 
         public void RemoveAllPur()
         {
-            purchase.Clear();
+            _purchaseDataService.RemoveAllPur();
         }
 
         public int GetPurchaseCount()
         {
-            int count = purchase.Count;
-            return count;
+            return _purchaseDataService.GetPurchaseCount();
         }
 
     }
