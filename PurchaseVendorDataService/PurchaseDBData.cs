@@ -69,9 +69,9 @@ namespace PurchaseVendorDataService
             sqlConnection.Close();
         }
 
-        public Purchase? GetById(Guid id) // foreach a in List<Purchase>, first found instance of Guid id (ProductID) is returned
+        public Purchase? GetById(Guid id)
         {
-            var selectStatement = "SELECT tbl_purchase VALUES (ProductID, PurchaseVndr, PurchaseName, PurchaseQty, PurchasePrice, PurchaseDate FROM tbl_purchase WHERE ProductID = @ProductID";
+            var selectStatement = "SELECT ProductID, PurchaseVndr, PurchaseName, PurchaseQty, PurchasePrice, PurchaseDate FROM tbl_purchase WHERE ProductID = @ProductID";
 
             SqlCommand selectCommand = new SqlCommand(selectStatement, sqlConnection);
             selectCommand.Parameters.AddWithValue("@ProductID", id.ToString());
@@ -99,76 +99,217 @@ namespace PurchaseVendorDataService
 
         public Purchase? PurchaseGetByName(string pur)
         {
-            
-            return purJson.FirstOrDefault(a => a.PurchaseName == pur);
+            var selectStatement = "SELECT ProductID, PurchaseVndr, PurchaseName, PurchaseQty, PurchasePrice, PurchaseDate FROM tbl_purchase WHERE PurchaseName = @PurchaseName";
+
+            SqlCommand selectCommand = new SqlCommand(selectStatement, sqlConnection);
+            selectCommand.Parameters.AddWithValue("@PurchaseName", pur);
+
+            sqlConnection.Open();
+
+            SqlDataReader reader = selectCommand.ExecuteReader();
+
+            var purch = new Purchase();
+
+            while (reader.Read())
+            {
+                // convert to string deserialization
+                purch.ProductID = Guid.Parse(reader["ProductID"].ToString());
+                purch.PurchaseVndr = reader["PurchaseVndr"].ToString();
+                purch.PurchaseName = reader["PurchaseName"].ToString();
+                purch.PurchaseQty = int.Parse(reader["PurchaseQty"].ToString());
+                purch.PurchasePrice = double.Parse(reader["PurchasePrice"].ToString());
+                purch.PurchaseDate = reader["PurchaseDate"].ToString();
+            }
+
+            sqlConnection.Close();
+            return purch;
         }
         public Purchase? PurchaseGetByVndr(string pur)
         {
-            
-            return purJson.FirstOrDefault(a => a.PurchaseVndr == pur);
+            var selectStatement = "SELECT ProductID, PurchaseVndr, PurchaseName, PurchaseQty, PurchasePrice, PurchaseDate FROM tbl_purchase WHERE PurchaseVndr = @PurchaseVndr";
+
+            SqlCommand selectCommand = new SqlCommand(selectStatement, sqlConnection);
+            selectCommand.Parameters.AddWithValue("@PurchaseVndr", pur);
+
+            sqlConnection.Open();
+
+            SqlDataReader reader = selectCommand.ExecuteReader();
+
+            var purch = new Purchase();
+
+            while (reader.Read())
+            {
+                // convert to string deserialization
+                purch.ProductID = Guid.Parse(reader["ProductID"].ToString());
+                purch.PurchaseVndr = reader["PurchaseVndr"].ToString();
+                purch.PurchaseName = reader["PurchaseName"].ToString();
+                purch.PurchaseQty = int.Parse(reader["PurchaseQty"].ToString());
+                purch.PurchasePrice = double.Parse(reader["PurchasePrice"].ToString());
+                purch.PurchaseDate = reader["PurchaseDate"].ToString();
+            }
+
+            sqlConnection.Close();
+            return purch;
         }
 
-        public bool PurchaseExists(string pur) // compare if inputted string vendor returns true when there is an equal to it "=="
+        public bool PurchaseExists(string pur)
         {
-            
-            return purJson.Any(a => a.PurchaseName == pur);
+            var selectStatement = "SELECT ProductID, PurchaseVndr, PurchaseName, PurchaseQty, PurchasePrice, PurchaseDate FROM tbl_purchase WHERE PurchaseName = @PurchaseName";
+
+            SqlCommand selectCommand = new SqlCommand(selectStatement, sqlConnection);
+            selectCommand.Parameters.AddWithValue("@PurchaseName", pur);
+
+            sqlConnection.Open();
+
+            SqlDataReader reader = selectCommand.ExecuteReader();
+
+            var purch = new Purchase();
+
+            while (reader.Read())
+            {
+                purch.ProductID = Guid.Parse(reader["ProductID"].ToString());
+                purch.PurchaseVndr = reader["PurchaseVndr"].ToString();
+                purch.PurchaseName = reader["PurchaseName"].ToString();
+                purch.PurchaseQty = int.Parse(reader["PurchaseQty"].ToString());
+                purch.PurchasePrice = double.Parse(reader["PurchasePrice"].ToString());
+                purch.PurchaseDate = reader["PurchaseDate"].ToString();
+            }
+
+            sqlConnection.Close();
+
+            return purch.PurchaseName != null;
         }
 
         public void Update(Purchase pur)
         {
-            
+            sqlConnection.Open();
 
-            var existing = GetById(pur.ProductID);
-            if (existing != null)
-            {
-                existing.PurchaseVndr = pur.PurchaseVndr;
-                existing.PurchaseName = pur.PurchaseName;
-                existing.PurchaseQty = pur.PurchaseQty;
-                existing.PurchasePrice = pur.PurchasePrice;
-                existing.PurchaseDate = pur.PurchaseDate;
-            }
+            var updateStatement = $"UPDATE tbl_purchase SET PurchaseVndr = @PurchaseVndr, PurchaseName = @PurchaseName, PurchaseQty = @PurchaseQty, PurchasePrice = @PurchasePrice, PurchaseDate = @PurchaseDate WHERE ProductID = @ProductID";
 
-            
+            SqlCommand updateCommand = new SqlCommand(updateStatement, sqlConnection);
+
+            updateCommand.Parameters.AddWithValue("@PurchaseVndr", pur.PurchaseVndr);
+            updateCommand.Parameters.AddWithValue("@PurchaseName", pur.PurchaseName);
+            updateCommand.Parameters.AddWithValue("@PurchaseQty", pur.PurchaseQty);
+            updateCommand.Parameters.AddWithValue("@PurchasePrice", pur.PurchasePrice);
+            updateCommand.Parameters.AddWithValue("@PurchaseDate", pur.PurchaseDate);
+            updateCommand.Parameters.AddWithValue("@ProductID", pur.ProductID);
+            updateCommand.ExecuteNonQuery();
+
+            sqlConnection.Close();
         }
 
         public List<Purchase> GetAllPurchases()
         {
-            
-            return purJson;
+            var selectStatement = "SELECT ProductID, PurchaseVndr, PurchaseName, PurchaseQty, PurchasePrice, PurchaseDate FROM tbl_purchase";
+
+            SqlCommand selectCommand = new SqlCommand(selectStatement, sqlConnection);
+
+            sqlConnection.Open();
+
+            SqlDataReader reader = selectCommand.ExecuteReader();
+
+            var purch = new List<Purchase>();
+
+            while (reader.Read())
+            {
+                // convert to string deserialization
+
+                Purchase purchase = new Purchase();
+                purchase.ProductID = Guid.Parse(reader["ProductID"].ToString());
+                purchase.PurchaseVndr = reader["PurchaseVndr"].ToString();
+                purchase.PurchaseName = reader["PurchaseName"].ToString();
+                purchase.PurchaseQty = int.Parse(reader["PurchaseQty"].ToString());
+                purchase.PurchasePrice = double.Parse(reader["PurchasePrice"].ToString());
+                purchase.PurchaseDate = reader["PurchaseDate"].ToString();
+
+                purch.Add(purchase);
+            }
+
+            sqlConnection.Close();
+            return purch;
         }
         public List<Purchase> PurchaseFromVendors(string ven) // return purchase with specific vendors
         {
-            
-            return purJson
-                .Where(a => a.PurchaseVndr == ven)
-                .ToList();
+            var selectStatement = "SELECT ProductID, PurchaseVndr, PurchaseName, PurchaseQty, PurchasePrice, PurchaseDate FROM tbl_purchase WHERE PurchaseVndr = @PurchaseVndr";
+
+            SqlCommand selectCommand = new SqlCommand(selectStatement, sqlConnection);
+            selectCommand.Parameters.AddWithValue("@PurchaseVndr", ven);
+
+            sqlConnection.Open();
+
+            SqlDataReader reader = selectCommand.ExecuteReader();
+
+            var purch = new List<Purchase>();
+
+            while (reader.Read())
+            {
+                // convert to string deserialization
+
+                Purchase purchase = new Purchase();
+                purchase.ProductID = Guid.Parse(reader["ProductID"].ToString());
+                purchase.PurchaseVndr = reader["PurchaseVndr"].ToString();
+                purchase.PurchaseName = reader["PurchaseName"].ToString();
+                purchase.PurchaseQty = int.Parse(reader["PurchaseQty"].ToString());
+                purchase.PurchasePrice = double.Parse(reader["PurchasePrice"].ToString());
+                purchase.PurchaseDate = reader["PurchaseDate"].ToString();
+
+                purch.Add(purchase);
+            }
+
+            sqlConnection.Close();
+            return purch;
         }
         public void RemovePurchase(string purName)
         {
-            
-            purJson.Remove(purJson.First(a => a.PurchaseName == purName));
-            
+            sqlConnection.Open();
+
+            var deleteStatement = "DELETE FROM tbl_purchase WHERE PurchaseName = @PurchaseName";
+
+            SqlCommand deleteCommand = new SqlCommand(deleteStatement, sqlConnection);
+
+            deleteCommand.Parameters.AddWithValue("@PurchaseName", purName);
+            deleteCommand.ExecuteNonQuery();
+
+            sqlConnection.Close();
         }
 
         public void RemoveAllPurchaseByVen(string purVndr)
         {
-            
-            purJson.RemoveAll(a => a.PurchaseVndr == purVndr);
-            
+            sqlConnection.Open();
+
+            var deleteStatement = "DELETE FROM tbl_purchase WHERE PurchaseVndr = @PurchaseVndr";
+
+            SqlCommand deleteCommand = new SqlCommand(deleteStatement, sqlConnection);
+
+            deleteCommand.Parameters.AddWithValue("@PurchaseVndr", purVndr);
+            deleteCommand.ExecuteNonQuery();
+
+            sqlConnection.Close();
         }
 
         public void RemoveAllPur()
         {
-            
-            purJson.Clear();
-            
+            sqlConnection.Open();
+            var truncateStatement = "TRUNCATE TABLE tbl_purchase";
+
+            SqlCommand truncateCommand = new SqlCommand(truncateStatement, sqlConnection);
+            truncateCommand.ExecuteNonQuery();
+
+            sqlConnection.Close();
         }
 
         public int GetPurchaseCount()
         {
-            
-            int count = purJson.Count;
-            return count;
+            sqlConnection.Open();
+
+            var query = "SELECT COUNT(*) FROM tbl_purchase";
+
+            SqlCommand queryCommand = new SqlCommand(query, sqlConnection);
+            var count = queryCommand.ExecuteScalar();
+
+            sqlConnection.Close();
+            return count != null ? Convert.ToInt32(count) : 0;
         }
 
     }

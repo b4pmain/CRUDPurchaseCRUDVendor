@@ -118,10 +118,10 @@ namespace PurchaseVendorDataService
             {
                 // convert to string deserialization
                 vendor.VendorID = Guid.Parse(reader["VendorID"].ToString());
-                vendor.VendorName = reader["VendorID"].ToString();
-                vendor.VendorDescription = reader["VendorID"].ToString();
-                vendor.ContactPhone = reader["VendorID"].ToString();
-                vendor.ContactEmail = reader["VendorID"].ToString();
+                vendor.VendorName = reader["VendorName"].ToString();
+                vendor.VendorDescription = reader["VendorDescription"].ToString();
+                vendor.ContactPhone = reader["ContactPhone"].ToString();
+                vendor.ContactEmail = reader["ContactEmail"].ToString();
 
             }
 
@@ -146,10 +146,10 @@ namespace PurchaseVendorDataService
             {
                 // convert to string deserialization
                 vendor.VendorID = Guid.Parse(reader["VendorID"].ToString());
-                vendor.VendorName = reader["VendorID"].ToString();
-                vendor.VendorDescription = reader["VendorID"].ToString();
-                vendor.ContactPhone = reader["VendorID"].ToString();
-                vendor.ContactEmail = reader["VendorID"].ToString();
+                vendor.VendorName = reader["VendorName"].ToString();
+                vendor.VendorDescription = reader["VendorDescription"].ToString();
+                vendor.ContactPhone = reader["ContactPhone"].ToString();
+                vendor.ContactEmail = reader["ContactEmail"].ToString();
 
             }
 
@@ -175,11 +175,10 @@ namespace PurchaseVendorDataService
             {
                 // convert to string deserialization
                 vendor.VendorID = Guid.Parse(reader["VendorID"].ToString());
-                vendor.VendorName = reader["VendorID"].ToString();
-                vendor.VendorDescription = reader["VendorID"].ToString();
-                vendor.ContactPhone = reader["VendorID"].ToString();
-                vendor.ContactEmail = reader["VendorID"].ToString();
-
+                vendor.VendorName = reader["VendorName"].ToString();
+                vendor.VendorDescription = reader["VendorDescription"].ToString();
+                vendor.ContactPhone = reader["ContactPhone"].ToString();
+                vendor.ContactEmail = reader["ContactEmail"].ToString();
             }
 
             sqlConnection.Close();
@@ -191,7 +190,7 @@ namespace PurchaseVendorDataService
         {
             sqlConnection.Open();
 
-            var updateStatement = $"UPDATE tbl_vendor SET VendorName = @VendorName, VendorDescription = @VendorDescription, ContactPhone = @ContactPhone, ContactEmail = @ContactEmail";
+            var updateStatement = $"UPDATE tbl_vendor SET VendorName = @VendorName, VendorDescription = @VendorDescription, ContactPhone = @ContactPhone, ContactEmail = @ContactEmail WHERE VendorID = @VendorID";
 
             SqlCommand updateCommand = new SqlCommand(updateStatement, sqlConnection);
 
@@ -199,6 +198,7 @@ namespace PurchaseVendorDataService
             updateCommand.Parameters.AddWithValue("@VendorDescription", vendor.VendorDescription);
             updateCommand.Parameters.AddWithValue("@ContactPhone", vendor.ContactPhone);
             updateCommand.Parameters.AddWithValue("@ContactEmail", vendor.ContactEmail);
+            updateCommand.Parameters.AddWithValue("@VendorID", vendor.VendorID);
             updateCommand.ExecuteNonQuery();
 
             sqlConnection.Close();
@@ -223,6 +223,7 @@ namespace PurchaseVendorDataService
             var truncateStatement = "TRUNCATE TABLE tbl_vendor";
 
             SqlCommand truncateCommand = new SqlCommand(truncateStatement, sqlConnection);
+            truncateCommand.ExecuteNonQuery();
 
             sqlConnection.Close();
         }

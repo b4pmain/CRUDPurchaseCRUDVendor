@@ -451,7 +451,6 @@ namespace CRUDPurchaseCRUDVendor
 
                 if (isExisting && venName != "")
                 {
-                    Console.WriteLine($"List of \"{venName}\" Purchases: ");
                     break;
                 }
 
