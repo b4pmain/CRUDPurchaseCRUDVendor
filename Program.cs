@@ -8,9 +8,6 @@ namespace CRUDPurchaseCRUDVendor
 {
     internal class Program
     {
-        static List<string> purchase = new List<string>();
-        static List<string> vendor = new List<string>();
-
         static PurVenAppService pvAppService = new PurVenAppService();
 
         static bool OnSession = true;
@@ -359,17 +356,21 @@ namespace CRUDPurchaseCRUDVendor
                 if (vendorName != "")
                 {
                     venIsExisting = pvAppService.venIsExisting(vendorName);
-                    if (venIsExisting)
+                    var venDetails = pvAppService.GetVendorByName(vendorName);
+                    if (!venIsExisting)
                     {
-                        Console.WriteLine($"Vendor \"{vendorName}\" found." +
-                            $"\n[Product List]");
-                        srchPrchVen(vendorName);
-                        // srchPrchVen
+                        Console.WriteLine($"Vendor \"{vendorName}\" not found.");
                         break;
                     }
                     else
                     {
-                        Console.WriteLine($"Vendor \"{vendorName}\" not found.");
+                        Console.WriteLine($"Vendor \"{vendorName}\" found." +
+                            $"\nDescrption: {venDetails.VendorDescription}" +
+                            $"\nContact Phone: {venDetails.ContactPhone}" +
+                            $"\nContact Email: {venDetails.ContactEmail}\n" +
+                            $"\n[Product List]\n");
+                        srchPrchVen(vendorName);
+                        // srchPrchVen
                         break;
                     }
                 }
@@ -390,7 +391,7 @@ namespace CRUDPurchaseCRUDVendor
                 Console.Write("Enter Purchase Name: ");
                 prchName = Console.ReadLine();
 
-                var vendorName = pvAppService.PurGetByVendorName(prchName);
+                var prchDetails = pvAppService.PurGetByVendorName(prchName);
                 isExisting = pvAppService.prchIsExisting(prchName);
 
                 if (!isExisting)
@@ -400,7 +401,10 @@ namespace CRUDPurchaseCRUDVendor
                 }
                 else
                 {
-                    Console.WriteLine($"Purchase \"{prchName}\" found under \"{vendorName.PurchaseVndr}\"");
+                    Console.WriteLine($"Purchase \"{prchName}\" found under \"{prchDetails.PurchaseVndr}\".");
+                    Console.WriteLine($"\nQuantity: {prchDetails.PurchaseQty}" +
+                        $"\nPrice: {prchDetails.PurchasePrice}" +
+                        $"\nDate: {prchDetails.PurchaseDate}\n");
                     break;
                 }
 

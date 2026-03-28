@@ -9,8 +9,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="PurchaseVendorAppService\**" />
+    <Compile Remove="PurchaseVendorDataService\**" />
+    <Compile Remove="PurchaseVendorModels\**" />
+    <EmbeddedResource Remove="PurchaseVendorAppService\**" />
+    <EmbeddedResource Remove="PurchaseVendorDataService\**" />
+    <EmbeddedResource Remove="PurchaseVendorModels\**" />
+    <None Remove="PurchaseVendorAppService\**" />
+    <None Remove="PurchaseVendorDataService\**" />
+    <None Remove="PurchaseVendorModels\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="BuildOutput\" />
-    <Folder Include="PurchaseVendorAppService\" />
   </ItemGroup>
 
   <ItemGroup>

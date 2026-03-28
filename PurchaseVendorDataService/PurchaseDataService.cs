@@ -14,9 +14,9 @@ namespace PurchaseVendorDataService
             _purchaseDataService = purchaseDataService;
         }
 
-        public void AddP(Purchase pur)
+        public void AddPurchase(Purchase pur)
         {
-            _purchaseDataService.AddP(pur);
+            _purchaseDataService.AddPurchase(pur);
         }
 
         public Purchase? GetById(Guid id) // foreach a in List<Purchase>, first found instance of Guid id (ProductID) is returned
@@ -38,9 +38,9 @@ namespace PurchaseVendorDataService
             return _purchaseDataService.PurchaseExists(pur);
         }
 
-        public void Update(Purchase pur)
+        public void UpdatePurchase(Purchase pur)
         {
-            _purchaseDataService.Update(pur);
+            _purchaseDataService.UpdatePurchase(pur);
         }
 
         public List<Purchase> GetAllPurchases()
@@ -53,17 +53,17 @@ namespace PurchaseVendorDataService
         }
         public void RemovePurchase(string purName)
         {
-            _purchaseDataService.RemovePurchase(purName);
+            _purchaseDataService.DeletePurchase(purName);
         }
 
         public void RemoveAllPurchaseByVen(string purVndr)
         {
-            _purchaseDataService.RemoveAllPurchaseByVen(purVndr);
+            _purchaseDataService.DeleteAllPurchaseByVen(purVndr);
         }
 
         public void RemoveAllPur()
         {
-            _purchaseDataService.RemoveAllPur();
+            _purchaseDataService.DeleteAllPur();
         }
 
         public int GetPurchaseCount()

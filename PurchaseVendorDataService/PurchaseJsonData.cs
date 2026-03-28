@@ -66,7 +66,7 @@ namespace PurchaseVendorDataService
                     .ToList();
             }
         }
-        public void AddP(Purchase pur)
+        public void AddPurchase(Purchase pur)
         {
             purJson.Add(pur);
             SaveToJsonPur();
@@ -95,7 +95,7 @@ namespace PurchaseVendorDataService
             return purJson.Any(a => a.PurchaseName == pur);
         }
 
-        public void Update(Purchase pur)
+        public void UpdatePurchase(Purchase pur)
         {
             RetrieveFromJsonPur();
 
@@ -124,21 +124,21 @@ namespace PurchaseVendorDataService
                 .Where(a => a.PurchaseVndr == ven)
                 .ToList();
         }
-        public void RemovePurchase(string purName)
+        public void DeletePurchase(string purName)
         {
             RetrieveFromJsonPur();
             purJson.Remove(purJson.First(a => a.PurchaseName == purName));
             SaveToJsonPur();
         }
 
-        public void RemoveAllPurchaseByVen(string purVndr)
+        public void DeleteAllPurchaseByVen(string purVndr)
         {
             RetrieveFromJsonPur();
             purJson.RemoveAll(a => a.PurchaseVndr == purVndr);
             SaveToJsonPur();
         }
 
-        public void RemoveAllPur()
+        public void DeleteAllPur()
         {
             RetrieveFromJsonPur();
             purJson.Clear();

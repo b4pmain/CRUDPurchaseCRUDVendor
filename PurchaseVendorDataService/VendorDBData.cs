@@ -74,15 +74,15 @@ namespace PurchaseVendorDataService
                     ContactEmail = "account@oishi.com.ph"
                 };
 
-                AddV(nescafe);
-                AddV(rebisco);
-                AddV(sanmig);
-                AddV(nestle);
-                AddV(oishi);
+                AddVendor(nescafe);
+                AddVendor(rebisco);
+                AddVendor(sanmig);
+                AddVendor(nestle);
+                AddVendor(oishi);
             }
         }
 
-        public void AddV(Vendor vendor)
+        public void AddVendor(Vendor vendor)
         {
             var insertStatement = "INSERT INTO tbl_vendor VALUES (@VendorId, @VendorName, @VendorDescription, @ContactPhone, @ContactEmail)";
 
@@ -186,7 +186,7 @@ namespace PurchaseVendorDataService
             return vendor.VendorName != null;
         }
 
-        public void Update(Vendor vendor)
+        public void UpdateVendor(Vendor vendor)
         {
             sqlConnection.Open();
 
@@ -204,7 +204,7 @@ namespace PurchaseVendorDataService
             sqlConnection.Close();
         }
 
-        public void RemoveV(string vendorName) // remove vendor object from the list by name
+        public void DeleteVendor(string vendorName) // remove vendor object from the list by name
         {
             sqlConnection.Open();
 
@@ -217,7 +217,7 @@ namespace PurchaseVendorDataService
 
             sqlConnection.Close();
         }
-        public void RemoveAllVen()
+        public void DeleteAllVen()
         {
             sqlConnection.Open();
             var truncateStatement = "TRUNCATE TABLE tbl_vendor";

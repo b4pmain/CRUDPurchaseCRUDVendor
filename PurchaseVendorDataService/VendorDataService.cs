@@ -16,9 +16,9 @@ namespace PurchaseVendorDataService
             _vendorDataService = vendorDataService;
         }
 
-        public void AddV(Vendor vendor)
+        public void AddVendor(Vendor vendor)
         {
-            _vendorDataService.AddV(vendor);
+            _vendorDataService.AddVendor(vendor);
         }
 
         public Vendor? GetById(Guid id)
@@ -36,18 +36,18 @@ namespace PurchaseVendorDataService
             return _vendorDataService.VendorExists(vendor);
         }
 
-        public void Update(Vendor vendor)
+        public void UpdateVendor(Vendor vendor)
         {
-            _vendorDataService.Update(vendor);
+            _vendorDataService.UpdateVendor(vendor);
         }
 
-        public void RemoveV(string vendorName)
+        public void DeleteVendor(string vendorName)
         {
-            _vendorDataService.RemoveV(vendorName);
+            _vendorDataService.DeleteVendor(vendorName);
         }
-        public void RemoveAllVen()
+        public void DeleteAllVen()
         {
-            _vendorDataService.RemoveAllVen();
+            _vendorDataService.DeleteAllVen();
         }
         public List<Vendor> GetVendors()
         {

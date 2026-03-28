@@ -7,7 +7,7 @@ using System.Numerics;
 using System.Text;
 using System.Text.Json;
 
-// already implemented since March 25 Commit
+// changed naming scheme to reflect DB concern
 
 namespace PurchaseVendorDataService
 {
@@ -47,11 +47,11 @@ namespace PurchaseVendorDataService
                     PurchaseDate = "2026-03-09"
                 };
 
-                AddP(cofOneNescafe);
-                AddP(cofTwoNescafe);
+                AddPurchase(cofOneNescafe);
+                AddPurchase(cofTwoNescafe);
             }
         }
-        public void AddP(Purchase pur)
+        public void AddPurchase(Purchase pur)
         {
             var insertStatement = "INSERT INTO tbl_purchase VALUES (@ProductID, @PurchaseVndr, @PurchaseName, @PurchaseQty, @PurchasePrice, @PurchaseDate)";
 
@@ -182,7 +182,7 @@ namespace PurchaseVendorDataService
             return purch.PurchaseName != null;
         }
 
-        public void Update(Purchase pur)
+        public void UpdatePurchase(Purchase pur)
         {
             sqlConnection.Open();
 
@@ -262,7 +262,7 @@ namespace PurchaseVendorDataService
             sqlConnection.Close();
             return purch;
         }
-        public void RemovePurchase(string purName)
+        public void DeletePurchase(string purName)
         {
             sqlConnection.Open();
 
@@ -276,7 +276,7 @@ namespace PurchaseVendorDataService
             sqlConnection.Close();
         }
 
-        public void RemoveAllPurchaseByVen(string purVndr)
+        public void DeleteAllPurchaseByVen(string purVndr)
         {
             sqlConnection.Open();
 
@@ -290,7 +290,7 @@ namespace PurchaseVendorDataService
             sqlConnection.Close();
         }
 
-        public void RemoveAllPur()
+        public void DeleteAllPur()
         {
             sqlConnection.Open();
             var truncateStatement = "TRUNCATE TABLE tbl_purchase";

@@ -27,7 +27,7 @@ namespace PurchaseVendorAppService
                 ContactEmail = newVendor.ContactEmail
             };
 
-            vendorDataService.AddV(vendor);
+            vendorDataService.AddVendor(vendor);
             return true;
         }
 
@@ -37,14 +37,14 @@ namespace PurchaseVendorAppService
                 return false;
 
             String vendorName = vendor.VendorName;
-            vendorDataService.RemoveV(vendorName.ToUpper());
+            vendorDataService.DeleteVendor(vendorName.ToUpper());
             purchaseDataService.RemoveAllPurchaseByVen(vendorName.ToUpper()); // deleting vendor also deletes all of its products
             return true;
         }
 
         public bool RemoveAllVen()
         {
-            vendorDataService.RemoveAllVen();
+            vendorDataService.DeleteAllVen();
             return true;
         }
         public bool ChangeInfo(string vendorName, string vendorDescription, string contactPhone, string contactEmail)
@@ -58,7 +58,7 @@ namespace PurchaseVendorAppService
             existing.ContactPhone = contactPhone;
             existing.ContactEmail = contactEmail;
 
-            vendorDataService.Update(existing);
+            vendorDataService.UpdateVendor(existing);
             return true;
         }
 
@@ -79,6 +79,12 @@ namespace PurchaseVendorAppService
         public Vendor? GetVendor(Guid VendorID)
         {
             return vendorDataService.GetById(VendorID);
+        }
+
+
+        public Vendor? GetVendorByName(string VendorName)
+        {
+            return vendorDataService.GetByVendorName(VendorName);
         }
 
         public int VenCount()
@@ -106,7 +112,7 @@ namespace PurchaseVendorAppService
                 PurchaseDate = newPurchase.PurchaseDate
             };
 
-            purchaseDataService.AddP(purchase);
+            purchaseDataService.AddPurchase(purchase);
             return true;
         }
 
@@ -122,7 +128,7 @@ namespace PurchaseVendorAppService
             existing.PurchasePrice = purchasePrice;
             existing.PurchaseDate = purchaseDate;
 
-            purchaseDataService.Update(existing);
+            purchaseDataService.UpdatePurchase(existing);
             return true;
         }
 

@@ -98,7 +98,7 @@ namespace PurchaseVendorDataService
             }
         }
 
-        public void AddV(Vendor vendor)
+        public void AddVendor(Vendor vendor)
         {
             venJson.Add(vendor);
             SaveToJsonVen();
@@ -122,7 +122,7 @@ namespace PurchaseVendorDataService
             return venJson.Any(a => a.VendorName == vendor);
         }
 
-        public void Update(Vendor vendor)
+        public void UpdateVendor(Vendor vendor)
         {
             RetrieveFromJsonVen();
 
@@ -138,13 +138,13 @@ namespace PurchaseVendorDataService
             SaveToJsonVen();
         }
 
-        public void RemoveV(string vendorName) // remove vendor object from the list by name
+        public void DeleteVendor(string vendorName) // remove vendor object from the list by name
         {
             RetrieveFromJsonVen();
             venJson.Remove(venJson.First(a => a.VendorName == vendorName));
             SaveToJsonVen();
         }
-        public void RemoveAllVen()
+        public void DeleteAllVen()
         {
             RetrieveFromJsonVen();
             venJson.Clear();

@@ -66,7 +66,7 @@ namespace PurchaseVendorDataService
             vendors.Add(oishi);
         }
 
-        public void AddV(Vendor vendor)
+        public void AddVendor(Vendor vendor)
         {
             vendors.Add(vendor);
         }
@@ -86,7 +86,7 @@ namespace PurchaseVendorDataService
             return vendors.Any(a => a.VendorName == vendor);
         }
 
-        public void Update(Vendor vendor)
+        public void UpdateVendor(Vendor vendor)
         {
             var existing = GetById(vendor.VendorID);
             if (existing != null)
@@ -98,11 +98,11 @@ namespace PurchaseVendorDataService
             }
         }
 
-        public void RemoveV(string vendorName) // remove vendor object from the list by name
+        public void DeleteVendor(string vendorName) // remove vendor object from the list by name
         { 
             vendors.Remove(vendors.First(a => a.VendorName == vendorName));
         }
-        public void RemoveAllVen()
+        public void DeleteAllVen()
         {
             vendors.Clear();
         }

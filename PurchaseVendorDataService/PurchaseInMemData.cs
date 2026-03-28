@@ -36,7 +36,7 @@ namespace PurchaseVendorDataService
 
         }
 
-        public void AddP(Purchase pur)
+        public void AddPurchase(Purchase pur)
         {
             purchase.Add(pur);
         }
@@ -60,7 +60,7 @@ namespace PurchaseVendorDataService
             return purchase.Any(a => a.PurchaseName == pur);
         }
 
-        public void Update(Purchase pur)
+        public void UpdatePurchase(Purchase pur)
         {
             var existing = GetById(pur.ProductID);
             if (existing != null)
@@ -83,17 +83,17 @@ namespace PurchaseVendorDataService
                 .Where(a => a.PurchaseVndr == ven)
                 .ToList();
         }
-        public void RemovePurchase(string purName)
+        public void DeletePurchase(string purName)
         {
             purchase.Remove(purchase.First(a => a.PurchaseName == purName));
         }
 
-        public void RemoveAllPurchaseByVen(string purVndr)
+        public void DeleteAllPurchaseByVen(string purVndr)
         {
             purchase.RemoveAll(a => a.PurchaseVndr == purVndr);
         }
 
-        public void RemoveAllPur()
+        public void DeleteAllPur()
         {
             purchase.Clear();
         }
