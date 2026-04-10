@@ -136,11 +136,11 @@ namespace CRUDPurchaseCRUDVendor
                     {
                         case "vendor":
                             Console.WriteLine("Selected: [Vendor]");
-                            addVendor();
+                            addVendorAmt();
                             break;
                         case "purchase":
                             Console.WriteLine("Selected: [Purchase]");
-                            addPrch();
+                            addPrchAmt();
                             break;
                         case "exit":
                             Menu();
@@ -157,103 +157,160 @@ namespace CRUDPurchaseCRUDVendor
 
             Menu();
         }
-        static void addVendor()
+        static void addVendorAmt()
         {
-            string vendorName,
+            string count;
+
+            while (true)
+            {
+                Console.Write("Input Amount of Vendor(s) to add: ");
+                count = Console.ReadLine();
+                if (int.TryParse(count, out int result))
+                {
+                    if (result > 0)
+                    {
+                        addVendor(result);
+                        break;
+                    }
+                    else
+                    {
+                        invalid();
+                    }
+                }
+                else
+                {
+                    invalid();
+                }
+            }
+        }
+        static void addVendor(int count)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                string vendorName,
                 vendorDescription,
                 contactPhone,
                 contactEmail;
 
-            bool isExisting;
+                bool isExisting;
 
-            while (true) 
-            {
-                separator();
-                Console.Write("Enter Vendor Name: ");
-                vendorName = Console.ReadLine();
-                vendorName.ToUpper();
-                Console.Write("Enter Vendor Description: ");
-                vendorDescription = Console.ReadLine();
-                Console.Write("Enter Contact Number: ");
-                contactPhone = Console.ReadLine();
-                Console.Write("Enter Contact Email: ");
-                contactEmail = Console.ReadLine();
-                isExisting = pvAppService.venIsExisting(vendorName);
-
-                if (vendorName != "" && vendorDescription != "" && contactPhone != "" && contactEmail != "" && !isExisting)
+                while (true)
                 {
-                    Console.WriteLine($"Successfully added \"{vendorName}\" and its entries." +
-                        $"\nDescription: {vendorDescription}" +
-                        $"\nContact Phone: {contactPhone}" +
-                        $"\nContact Email: {contactEmail}");
-                    break;
+                    separator();
+                    Console.Write("Enter Vendor Name: ");
+                    vendorName = Console.ReadLine();
+                    vendorName.ToUpper();
+                    Console.Write("Enter Vendor Description: ");
+                    vendorDescription = Console.ReadLine();
+                    Console.Write("Enter Contact Number: ");
+                    contactPhone = Console.ReadLine();
+                    Console.Write("Enter Contact Email: ");
+                    contactEmail = Console.ReadLine();
+                    isExisting = pvAppService.venIsExisting(vendorName);
+
+                    if (vendorName != "" && vendorDescription != "" && contactPhone != "" && contactEmail != "" && !isExisting)
+                    {
+                        Console.WriteLine($"Successfully added \"{vendorName}\" and its entries." +
+                            $"\nDescription: {vendorDescription}" +
+                            $"\nContact Phone: {contactPhone}" +
+                            $"\nContact Email: {contactEmail}");
+                        break;
+                    }
+                    invalid();
+                    Console.WriteLine($"Double Check if Vendor \"{vendorName}\" is a duplicate.");
                 }
-                invalid();
-                Console.WriteLine($"Double Check if Vendor \"{vendorName}\" is a duplicate.");
+
+                var newVendor = new Vendor
+                {
+                    VendorName = vendorName,
+                    VendorDescription = vendorDescription,
+                    ContactPhone = contactPhone,
+                    ContactEmail = contactEmail
+                };
+
+                pvAppService.AddVendor(newVendor);
+
             }
-
-            var newVendor = new Vendor 
-            { 
-                VendorName = vendorName, 
-                VendorDescription = vendorDescription, 
-                ContactPhone = contactPhone, 
-                ContactEmail = contactEmail
-            };
-
-            pvAppService.AddVendor(newVendor);
-
             Menu();
         }
-
-        static void addPrch()
+        static void addPrchAmt()
         {
-            string purchaseVndr,
-                purchaseName,
-                purchaseDate;
-
-            int purchaseQty;
-            double purchasePrice;
-
-            bool isExisting;
+            string count;
 
             while (true)
             {
-                separator();
-                Console.Write("Enter Purchase: ");
-                purchaseName = Console.ReadLine();
-                Console.Write("Enter Vendor: ");
-                purchaseVndr = Console.ReadLine();
-                purchaseVndr.ToUpper();
-                Console.Write("Enter Qty: ");
-                purchaseQty = Convert.ToInt32(Console.ReadLine());
-                Console.Write("Enter Price: ");
-                purchasePrice = Convert.ToDouble(Console.ReadLine());
-                Console.Write("Enter Date: ");
-                purchaseDate = Console.ReadLine();
-                isExisting = pvAppService.prchIsExisting(purchaseName);
-
-                if (purchaseVndr != "" && purchaseName != "" && purchaseDate != "" && purchaseQty != null && purchasePrice != null && !isExisting)
+                Console.Write("Input Amount of Purchase(s) to add: ");
+                count = Console.ReadLine();
+                if (int.TryParse(count, out int result))
                 {
-                    Console.WriteLine($"Successfully added \"{purchaseName}\" and its entries." +
-                        $"\nVendor: {purchaseVndr}" +
-                        $"\nQuantity: {purchaseQty}" +
-                        $"\nPrice: {purchasePrice}" +
-                        $"\nDate: {purchaseDate}");
-
-                    var newPurchase = new Purchase
+                    if (result > 0)
                     {
-                        PurchaseName = purchaseName,
-                        PurchaseVndr = purchaseVndr,
-                        PurchaseQty = purchaseQty,
-                        PurchasePrice = purchasePrice,
-                        PurchaseDate = purchaseDate
-                    };
-
-                    pvAppService.AddPurchase(newPurchase);
-                    break;
+                        addPrch(result);
+                        break;
+                    }
+                    else
+                    {
+                        invalid();
+                    }
                 }
-                invalid();
-                Console.WriteLine($"Double Check if Purchase \"{purchaseName}\" is a duplicate.");
+                else
+                {
+                    invalid();
+                }
+            }
+        }
+        static void addPrch(int count)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                string purchaseVndr,
+                purchaseName,
+                purchaseDate;
+
+                int purchaseQty;
+                double purchasePrice;
+
+                bool isExisting;
+
+                while (true)
+                {
+                    separator();
+                    Console.Write("Enter Purchase: ");
+                    purchaseName = Console.ReadLine();
+                    Console.Write("Enter Vendor: ");
+                    purchaseVndr = Console.ReadLine();
+                    purchaseVndr.ToUpper();
+                    Console.Write("Enter Qty: ");
+                    purchaseQty = Convert.ToInt32(Console.ReadLine());
+                    Console.Write("Enter Price: ");
+                    purchasePrice = Convert.ToDouble(Console.ReadLine());
+                    Console.Write("Enter Date: ");
+                    purchaseDate = Console.ReadLine();
+                    isExisting = pvAppService.prchIsExisting(purchaseName);
+
+                    if (purchaseVndr != "" && purchaseName != "" && purchaseDate != "" && purchaseQty != null && purchasePrice != null && !isExisting)
+                    {
+                        Console.WriteLine($"Successfully added \"{purchaseName}\" and its entries." +
+                            $"\nVendor: {purchaseVndr}" +
+                            $"\nQuantity: {purchaseQty}" +
+                            $"\nPrice: {purchasePrice}" +
+                            $"\nDate: {purchaseDate}");
+
+                        var newPurchase = new Purchase
+                        {
+                            PurchaseName = purchaseName,
+                            PurchaseVndr = purchaseVndr,
+                            PurchaseQty = purchaseQty,
+                            PurchasePrice = purchasePrice,
+                            PurchaseDate = purchaseDate
+                        };
+
+                        pvAppService.AddPurchase(newPurchase);
+                        break;
+                    }
+                    invalid();
+                    Console.WriteLine($"Double Check if Purchase \"{purchaseName}\" is a duplicate.");
+                }
             }
 
             Menu();
