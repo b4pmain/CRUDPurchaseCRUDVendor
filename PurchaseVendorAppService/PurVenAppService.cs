@@ -47,18 +47,9 @@ namespace PurchaseVendorAppService
             vendorDataService.DeleteAllVen();
             return true;
         }
-        public bool ChangeInfo(string vendorName, string vendorDescription, string contactPhone, string contactEmail)
+        public bool ChangeInfo(Vendor vendor)
         {
-            var existing = vendorDataService.GetByVendorName(vendorName);
-
-            if (existing == null)
-                return false;
-
-            existing.VendorDescription = vendorDescription;
-            existing.ContactPhone = contactPhone;
-            existing.ContactEmail = contactEmail;
-
-            vendorDataService.UpdateVendor(existing);
+            vendorDataService.UpdateVendor(vendor);
             return true;
         }
 
@@ -102,33 +93,13 @@ namespace PurchaseVendorAppService
             if (purchaseDataService.PurchaseExists(newPurchase.PurchaseName))
                 return false;
 
-            var purchase = new Purchase
-            {
-                ProductID = Guid.NewGuid(),
-                PurchaseVndr = newPurchase.PurchaseVndr.ToUpper(),
-                PurchaseName = newPurchase.PurchaseName,
-                PurchaseQty = newPurchase.PurchaseQty,
-                PurchasePrice = newPurchase.PurchasePrice,
-                PurchaseDate = newPurchase.PurchaseDate
-            };
-
-            purchaseDataService.AddPurchase(purchase);
+            purchaseDataService.AddPurchase(newPurchase);
             return true;
         }
 
-        public bool ChangePur(string purchaseName, string purchaseVndr, int purchaseQty, double purchasePrice, string purchaseDate)
+        public bool ChangePur(Purchase purchase)
         {
-            var existing = purchaseDataService.PurchaseGetByName(purchaseName);
-
-            if (existing == null)
-                return false;
-
-            existing.PurchaseVndr = purchaseVndr.ToUpper();
-            existing.PurchaseQty = purchaseQty;
-            existing.PurchasePrice = purchasePrice;
-            existing.PurchaseDate = purchaseDate;
-
-            purchaseDataService.UpdatePurchase(existing);
+            purchaseDataService.UpdatePurchase(purchase);
             return true;
         }
 
@@ -161,7 +132,7 @@ namespace PurchaseVendorAppService
         {
             return purchaseDataService.GetAllPurchases();
         }
-        public Purchase? PurGetByVendorName(string prchName)
+        public Purchase? PurGetByPurchaseName(string prchName)
         {
             var purchase = GetAllPurchases().FirstOrDefault(a => a.PurchaseName == prchName);
 
@@ -173,6 +144,11 @@ namespace PurchaseVendorAppService
         public List<Purchase> PurchaseFromVendor(string venName)
         {
             return purchaseDataService.PurchaseFromVendors(venName);
+        }
+
+        public Purchase? PurGetById(Guid id)
+        {
+            return purchaseDataService.GetById(id);
         }
         public int PurCount()
         {

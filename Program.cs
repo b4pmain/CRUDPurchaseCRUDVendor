@@ -448,7 +448,7 @@ namespace CRUDPurchaseCRUDVendor
                 Console.Write("Enter Purchase Name: ");
                 prchName = Console.ReadLine();
 
-                var prchDetails = pvAppService.PurGetByVendorName(prchName);
+                var prchDetails = pvAppService.PurGetByPurchaseName(prchName);
                 isExisting = pvAppService.prchIsExisting(prchName);
 
                 if (!isExisting)
@@ -615,7 +615,16 @@ namespace CRUDPurchaseCRUDVendor
 
                         if (vendorDescription != "" && contactPhone != "" && contactEmail != "")
                         {
-                            isSuccess = pvAppService.ChangeInfo(vendorName, vendorDescription, contactPhone, contactEmail);
+
+                            var updatedVendor = new Vendor
+                            {
+                                VendorName = vendorName,
+                                VendorDescription = vendorDescription,
+                                ContactPhone = contactPhone,
+                                ContactEmail = contactEmail
+                            };
+
+                            isSuccess = pvAppService.ChangeInfo(updatedVendor);
 
                             if (isSuccess)
                             {
@@ -685,7 +694,16 @@ namespace CRUDPurchaseCRUDVendor
                             if (prchVendor != "" && prchQty != null && prchPrice != null && prchDate != "") // validity checking if not empty
                             {
 
-                                isSuccess = pvAppService.ChangePur(prchName, prchVendor, prchQty, prchPrice, prchDate);
+                                var updatePurchase = new Purchase
+                                {
+                                    PurchaseVndr = prchVendor,
+                                    PurchaseName = prchName,
+                                    PurchaseQty = prchQty,
+                                    PurchasePrice = prchPrice,
+                                    PurchaseDate = prchDate
+                                };
+
+                                isSuccess = pvAppService.ChangePur(updatePurchase);
 
                                 if (isSuccess)
                                 {
